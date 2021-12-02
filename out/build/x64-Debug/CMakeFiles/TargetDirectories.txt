@@ -1,0 +1,5 @@
+H:/Coding/zcscripter-master/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+H:/Coding/zcscripter-master/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
+H:/Coding/zcscripter-master/out/build/x64-Debug/ZCScripter/CMakeFiles/ZCScripter.dir
+H:/Coding/zcscripter-master/out/build/x64-Debug/ZCScripter/CMakeFiles/edit_cache.dir
+H:/Coding/zcscripter-master/out/build/x64-Debug/ZCScripter/CMakeFiles/rebuild_cache.dir

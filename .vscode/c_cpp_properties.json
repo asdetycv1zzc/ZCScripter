@@ -1,0 +1,30 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "C:/mingw64/bin/g++.exe",
+            "intelliSenseMode": "windows-gcc-x64",
+            "compilerArgs": [
+                "-o",
+                "-m64",
+                "-Wall",
+                "-g",
+                "-static-libstdc++",
+                "-static-libgcc",
+                "-std=c++17",
+                "-fexec-charset=GBK"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}

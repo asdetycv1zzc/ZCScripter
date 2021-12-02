@@ -1,0 +1,26 @@
+﻿{
+  "configurations": [
+    {
+      "name": "msvc-x64-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "H:\\Coding\\ZCScripter\\out\\build\\${name}",
+      "installRoot": "H:\\Coding\\ZCScripter\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": ""
+    },
+    {
+      "name": "gcc-x64-Debug",
+      "generator": "MinGW Makefiles",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "gcc_x64" ],
+      "buildRoot": "H:\\Coding\\ZCScripter\\out\\build\\${name}",
+      "installRoot": "H:\\Coding\\ZCScripter\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": ""
+    }
+  ]
+}

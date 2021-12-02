@@ -1,0 +1,17 @@
+[
+{
+  "directory": "D:/Coding/ZCScripter/build/ZCScripter",
+  "command": "C:\\mingw64\\bin\\x86_64-w64-mingw32-g++.exe   -g2 -ggdb -m64 -std=c++17 -Wall -static-libgcc -static-libstdc++ -fexec-charset=GBK -o CMakeFiles\\ZCScripter.dir\\Core\\Script_Read.cpp.obj -c D:\\Coding\\ZCScripter\\ZCScripter\\Core\\Script_Read.cpp",
+  "file": "D:/Coding/ZCScripter/ZCScripter/Core/Script_Read.cpp"
+},
+{
+  "directory": "D:/Coding/ZCScripter/build/ZCScripter",
+  "command": "C:\\mingw64\\bin\\x86_64-w64-mingw32-g++.exe   -g2 -ggdb -m64 -std=c++17 -Wall -static-libgcc -static-libstdc++ -fexec-charset=GBK -o CMakeFiles\\ZCScripter.dir\\Core\\Script_Analyze.cpp.obj -c D:\\Coding\\ZCScripter\\ZCScripter\\Core\\Script_Analyze.cpp",
+  "file": "D:/Coding/ZCScripter/ZCScripter/Core/Script_Analyze.cpp"
+},
+{
+  "directory": "D:/Coding/ZCScripter/build/ZCScripter",
+  "command": "C:\\mingw64\\bin\\x86_64-w64-mingw32-g++.exe   -g2 -ggdb -m64 -std=c++17 -Wall -static-libgcc -static-libstdc++ -fexec-charset=GBK -o CMakeFiles\\ZCScripter.dir\\ZCScripter.cpp.obj -c D:\\Coding\\ZCScripter\\ZCScripter\\ZCScripter.cpp",
+  "file": "D:/Coding/ZCScripter/ZCScripter/ZCScripter.cpp"
+}
+]

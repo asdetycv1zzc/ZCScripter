@@ -1,0 +1,24 @@
+# ninja log v5
+1	446	6597289803911809	ZCScripter/CMakeFiles/ZCScripter.dir/Core/Script_Read.cpp.obj	f3fadf0f8652e465
+1	457	6597289396711883	ZCScripter/CMakeFiles/ZCScripter.dir/ZCScripter.cpp.obj	a86556e7d018769f
+447	729	6597289805961411	ZCScripter/ZCScripter.exe	4ddeb0b4be3477e2
+0	752	6597299908689334	ZCScripter/CMakeFiles/ZCScripter.dir/ZCScripter.cpp.obj	a86556e7d018769f
+9	486	6597302433523496	ZCScripter/CMakeFiles/ZCScripter.dir/Core/Script_Analyze.cpp.obj	9d200e89b13edda1
+0	537	6597302434031291	ZCScripter/CMakeFiles/ZCScripter.dir/Core/Script_Read.cpp.obj	f3fadf0f8652e465
+538	1011	6597302437993567	ZCScripter/ZCScripter.exe	919809e8aff4eaf
+1	442	6597303331364169	ZCScripter/CMakeFiles/ZCScripter.dir/ZCScripter.cpp.obj	a86556e7d018769f
+443	823	6597303334502292	ZCScripter/ZCScripter.exe	919809e8aff4eaf
+1	522	6597303884560898	ZCScripter/CMakeFiles/ZCScripter.dir/ZCScripter.cpp.obj	a86556e7d018769f
+522	868	6597303887479548	ZCScripter/ZCScripter.exe	919809e8aff4eaf
+0	13	0	clean	58b4a549bccbb0dc
+10	694	6597304083271623	ZCScripter/CMakeFiles/ZCScripter.dir/ZCScripter.cpp.obj	a86556e7d018769f
+19	703	6597304083388729	ZCScripter/CMakeFiles/ZCScripter.dir/Core/Script_Analyze.cpp.obj	9d200e89b13edda1
+2	714	6597304083505893	ZCScripter/CMakeFiles/ZCScripter.dir/Core/Script_Read.cpp.obj	f3fadf0f8652e465
+715	1030	6597304085874359	ZCScripter/ZCScripter.exe	919809e8aff4eaf
+1	591	6597304533735257	ZCScripter/CMakeFiles/ZCScripter.dir/ZCScripter.cpp.obj	a86556e7d018769f
+592	1011	6597304537195513	ZCScripter/ZCScripter.exe	919809e8aff4eaf
+0	16	0	clean	58b4a549bccbb0dc
+57	1416	660072660	ZCScripter/CMakeFiles/ZCScripter.dir/ZCScripter.cpp.obj	26a3402969a3a863
+0	1475	660072662	ZCScripter/CMakeFiles/ZCScripter.dir/Core/Script_Read.cpp.obj	e67325cffe98bc40
+3	1043	660072714	ZCScripter/CMakeFiles/ZCScripter.dir/Core/Script_Analyze.cpp.obj	d40d674dd79b3c29
+1043	2367	660072714	ZCScripter/ZCScripter.exe	43b836f8c4bdb12
