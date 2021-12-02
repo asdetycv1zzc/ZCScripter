@@ -1,8 +1,8 @@
-#include<iostream>
-#include<fstream>
-#include<string>
-#include<vector>
-#include"Script.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include "Script.h"
 using namespace std;
 
 SplitedScripts Script_Analyze::_SplitLinesByCRLF()
@@ -40,7 +40,7 @@ SplitedScripts Script_Analyze::SplitLinesByCRLF()
 	return _SplitLinesByCRLF();
 }
 
-ScriptBlocks Script_Analyze::_SplitScript(const wchar_t* ConvertedCRLF, long long JudgeLines)
+ScriptBlocks Script_Analyze::_SplitScript(const wchar_t *ConvertedCRLF, long long JudgeLines)
 {
 	vector<wstring> _source(_LineSplitedScriptContent.Scripts);
 	ScriptBlocks _result;
@@ -74,9 +74,7 @@ ScriptBlocks Script_Analyze::_SplitScript(const wchar_t* ConvertedCRLF, long lon
 				_counts = 0;
 			}
 			i++;
-
 		}
-
 	}
 	/*
 	long long _beginPos = 0, _endPos;
@@ -99,7 +97,7 @@ ScriptBlocks Script_Analyze::_SplitScript(const wchar_t* ConvertedCRLF, long lon
 
 	return _result;
 }
-ScriptBlocks Script_Analyze::SplitScript(const wchar_t* ConvertedCRLF, long long JudgeLines)
+ScriptBlocks Script_Analyze::SplitScript(const wchar_t *ConvertedCRLF, long long JudgeLines)
 {
 	return _SplitScript(ConvertedCRLF, JudgeLines);
 }
@@ -150,9 +148,9 @@ Script_Analyze::Script_Analyze()
 	_Length = -1;
 	_ScriptContent = NULLContent;
 }
-Script_Analyze::Script_Analyze(const char* k_ScriptAddress)
+Script_Analyze::Script_Analyze(const char *k_ScriptAddress)
 {
-	_ScriptAddress = const_cast<char*>(k_ScriptAddress);
+	_ScriptAddress = const_cast<char *>(k_ScriptAddress);
 	_ScriptContent = Script_Read(k_ScriptAddress).Read();
 	_LineSplitedScriptContent = SplitLinesByCRLF();
 	_ScriptBlocks = SplitScript();
