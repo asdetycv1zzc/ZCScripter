@@ -13,11 +13,12 @@ int main()
 	//temp.SplitLinesByCRLF();
 	//temp.SplitScript();
 	auto _output = temp.SplitScript();
-	for (unsigned long long i = 0; i < _output.BlockAmount; i++)
+	for (long long i = 0; i < _output.BlockAmount; i++)
 	{
-		for (unsigned long long j = 0; j < _output.Blocks[i].ScriptAmount; j++)
+		for (long long j = 0; j < _output.Blocks[i].ScriptAmount; j++)
 		{
-			cout << WStringToString(_output.Blocks[i].Scripts[j]);
+			wcout.imbue(locale("chs"));
+			wcout << WStringToString(_output.Blocks[i].Scripts[j]);
 		}
 	}
 	system("pause");
