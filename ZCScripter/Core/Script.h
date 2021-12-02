@@ -35,20 +35,39 @@ struct SystemScript
 {
 	unsigned long Order = -1;
 	StatusCode Status = -1;
-	std::vector<SingleScript> Scripts;
+	SingleScript Script;
 };
 struct CharacterScript
 {
 	unsigned long Order = -1;
 	StatusCode Status = -1;
 	std::wstring Speaker;
-	std::vector<SingleLineOfWords> Scripts;
+	SingleScript Script;
 };
-typedef std::vector<SystemScript> SystemScripts;
-typedef std::vector<CharacterScript> CharacterScripts;
+struct SystemScripts
+{
+	unsigned long BlockAmount = -1;
+	StatusCode Status = -1;
+	std::vector<SystemScript> Blocks;
+};
+struct CharacterScripts
+{
+	unsigned long BlockAmount = -1;
+	StatusCode Status = -1;
+	std::vector<CharacterScript> Blocks;
+};
+struct SortedScriptBlock
+{
+	StatusCode Status = -1;
+	unsigned long Order = -1;
+	unsigned long BlockAmount = -1;
+	SystemScripts _SystemScripts;
+	CharacterScripts _CharacterScripts;
+};
 struct SortedScripts
 {
 	StatusCode Status = -1;
+	unsigned long BlockAmount = -1;
 	SystemScripts _SystemScripts;
 	CharacterScripts _CharacterScripts;
 };

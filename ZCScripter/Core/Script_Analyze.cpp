@@ -114,12 +114,35 @@ SortedScripts Script_Analyze::_SortScript()
 		{
 			if (_ScriptBlocks.Blocks[i].Scripts[j][0] == L'^')
 			{
-				_system_part
+				SystemScript _temp;
+				_temp.Script = _ScriptBlocks.Blocks[i].Scripts[j];
+				_temp.Order = j;
+				_temp.Status = 0;
+				_system_part.Blocks.push_back(_temp);
+			}
+			else
+			{
+				CharacterScript _temp;
+				_temp.Script = _ScriptBlocks.Blocks[i].Scripts[j];
+				_temp.Order = j;
+				_temp.Status = 0;
+				_character_part.Blocks.push_back(_temp);
 			}
 		}
 	}
+	_system_part.BlockAmount = _system_part.Blocks.size();
+	_character_part.BlockAmount = _character_part.Blocks.size();
+	SortedScripts _result;
+	_result._CharacterScripts = _character_part;
+	_result._SystemScripts = _system_part;
+	_result.BlockAmount = _result._CharacterScripts.BlockAmount + _result._SystemScripts.BlockAmount;
+	_result.Status = 0;
+	return _result;
 }
-
+SortedScripts Script_Analyze::SortScript()
+{
+	return _SortScript();
+}
 Script_Analyze::Script_Analyze()
 {
 	ScriptContent NULLContent;
@@ -133,6 +156,7 @@ Script_Analyze::Script_Analyze(const char* k_ScriptAddress)
 	_ScriptContent = Script_Read(k_ScriptAddress).Read();
 	_LineSplitedScriptContent = SplitLinesByCRLF();
 	_ScriptBlocks = SplitScript();
+	_SortedScripts = SortScript();
 }
 Script_Analyze::~Script_Analyze()
 {
