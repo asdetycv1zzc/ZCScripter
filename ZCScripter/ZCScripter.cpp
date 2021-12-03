@@ -8,17 +8,15 @@ using namespace std;
 
 int main()
 {
-	//Script_Read temp("J:\\1.s");
 	Script_Analyze temp("1.s");
-	//temp.SplitLinesByCRLF();
-	//temp.SplitScript();
+	ios_base::sync_with_stdio(false);
 	auto _output = temp.SplitScript();
 	for (long long i = 0; i < _output.BlockAmount; i++)
 	{
 		for (long long j = 0; j < _output.Blocks[i].ScriptAmount; j++)
 		{
-			wcout.imbue(locale("chs"));
-			wcout << WStringToString(_output.Blocks[i].Scripts[j]);
+			//std::wcout.imbue(std::locale("chs"));
+			wcout << _output.Blocks[i].Scripts[j];
 		}
 	}
 	system("pause");

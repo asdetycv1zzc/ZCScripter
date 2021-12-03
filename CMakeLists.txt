@@ -3,7 +3,7 @@
 #
 cmake_minimum_required (VERSION 3.8)
 set(CMAKE_SYSTEM_NAME Windows)
-#SET(CMAKE_CXX_FLAGS_DEBUG "-g2 -m64 -std=c++17 -Wall -static-libgcc -static-libstdc++ -fexec-charset=GBK")
+SET(CMAKE_CXX_FLAGS_DEBUG "-g2 -m64 -std=c++17 -Wall -static-libgcc -static-libstdc++ -fexec-charset=GBK")
 
 
 project ("ZCScripter")

@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <cstring>
 #include "Script.h"
 using namespace std;
 
@@ -40,13 +41,13 @@ SplitedScripts Script_Analyze::SplitLinesByCRLF()
 	return _SplitLinesByCRLF();
 }
 
-ScriptBlocks Script_Analyze::_SplitScript(const wchar_t *ConvertedCRLF, long long JudgeLines)
+ScriptBlocks Script_Analyze::_SplitScript(const wchar_t *_ConvertedCRLF, unsigned long long _JudgeLines)
 {
 	vector<wstring> _source(_LineSplitedScriptContent.Scripts);
 	ScriptBlocks _result;
 	SplitedScripts _TempResult;
 	auto _size = _source.size();
-	long long i = 0, _counts = 0;
+	unsigned long long i = 0, _counts = 0;
 	while (i < _size)
 	{
 		if (_source[i] != L"\n")
@@ -64,7 +65,7 @@ ScriptBlocks Script_Analyze::_SplitScript(const wchar_t *ConvertedCRLF, long lon
 				j++;
 				_counts++;
 			}
-			if (_counts >= JudgeLines)
+			if (_counts >= _JudgeLines)
 			{
 				i = j;
 				_TempResult.ScriptAmount = _TempResult.Scripts.size();
@@ -97,7 +98,7 @@ ScriptBlocks Script_Analyze::_SplitScript(const wchar_t *ConvertedCRLF, long lon
 
 	return _result;
 }
-ScriptBlocks Script_Analyze::SplitScript(const wchar_t *ConvertedCRLF, long long JudgeLines)
+ScriptBlocks Script_Analyze::SplitScript(const wchar_t *ConvertedCRLF, unsigned long long JudgeLines)
 {
 	return _SplitScript(ConvertedCRLF, JudgeLines);
 }
@@ -116,6 +117,7 @@ SortedScripts Script_Analyze::_SortScript()
 				_temp.Script = _ScriptBlocks.Blocks[i].Scripts[j];
 				_temp.Order = j;
 				_temp.Status = 0;
+				_temp.ScriptType = GetSystemScriptType(_ScriptBlocks.Blocks[i].Scripts[j]);
 				_system_part.Blocks.push_back(_temp);
 			}
 			else
@@ -141,6 +143,47 @@ SortedScripts Script_Analyze::SortScript()
 {
 	return _SortScript();
 }
+
+SystemScriptTypes Script_Analyze::_GetSystemScriptType(const SingleScript _k_SplitedScript)
+{
+	SingleScript _temp(_k_SplitedScript);
+	auto _command = _temp.substr(0, _temp.find_first_of(L','));
+	if (_command.find(L"^bg") != wstring::npos)
+		return SystemScriptTypes::SetBackground;
+	if (_command.find(L"^chara") != wstring::npos)
+		return SystemScriptTypes::SetCharacterModel;
+	if (_command.find(L"^music") != wstring::npos)
+		return SystemScriptTypes::SetMusic;
+	if (_command.find(L"^sentence") != wstring::npos)
+		return SystemScriptTypes::SetSentenceEffects;
+	if (_command.find(L"^se") != wstring::npos)
+		return SystemScriptTypes::__UnknownScript1;
+	if (_command.find(L"^camera") != wstring::npos)
+		return SystemScriptTypes::SetCamera;
+	if (_command.find(L"include") != wstring::npos)
+		return SystemScriptTypes::SetPostScript;
+	if (_command.find(L"^face") != wstring::npos)
+		return SystemScriptTypes::__UnknownScript2;
+	return SystemScriptTypes::_UNDEFINED_SystemScript;
+}
+SystemScriptTypes Script_Analyze::GetSystemScriptType(const SingleScript k_SplitedScript)
+{
+	return _GetSystemScriptType(k_SplitedScript);
+}
+
+CharacterScriptTypes Script_Analyze::_GetCharacterScriptType(const SingleScript _k_SplitedScript)
+{
+	SingleScript _temp(_k_SplitedScript);
+	auto _command = _temp.substr(0, _temp.find_first_of(L','));
+	if (_command.find(L'%') != wstring::npos)
+		return CharacterScriptTypes::PlayVoice;
+	return CharacterScriptTypes::_UNDEFINED_CharacterScript;
+}
+CharacterScriptTypes Script_Analyze::GetCharacterScriptType(const SingleScript k_SplitedScript)
+{
+	return _GetCharacterScriptType(k_SplitedScript);
+}
+
 Script_Analyze::Script_Analyze()
 {
 	ScriptContent NULLContent;
@@ -158,5 +201,4 @@ Script_Analyze::Script_Analyze(const char *k_ScriptAddress)
 }
 Script_Analyze::~Script_Analyze()
 {
-	_ScriptAddress = NULL;
 }
