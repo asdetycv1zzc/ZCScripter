@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -182,6 +182,29 @@ CharacterScriptTypes Script_Analyze::_GetCharacterScriptType(const SingleScript 
 CharacterScriptTypes Script_Analyze::GetCharacterScriptType(const SingleScript k_SplitedScript)
 {
 	return _GetCharacterScriptType(k_SplitedScript);
+}
+
+wstring Script_Analyze::_GetSpeaker(const SplitedScripts _k_SplitedScripts)
+{
+	wstring _result;
+	for (unsigned long long i = 0; i < _k_SplitedScripts.ScriptAmount; i++)
+	{
+		auto beginPos = _k_SplitedScripts.Scripts[i].find_first_of(L"【");
+		auto endPos = _k_SplitedScripts.Scripts[i].find_first_of(L"】");
+		if (beginPos != wstring::npos)
+			if (GetCharacterScriptType(_k_SplitedScripts.Scripts[i]) == SystemScriptTypes::_UNDEFINED_SystemScript)
+			{
+				if (_result.empty())
+					_result = _k_SplitedScripts.Scripts[i].substr(beginPos + 1, endPos - beginPos - 1);
+				else
+					_result = _result + _k_SplitedScripts.Scripts[i].substr(beginPos + 1, endPos - beginPos - 1);
+			}
+	}
+	return _result;
+}
+wstring Script_Analyze::GetSpeaker(const SplitedScripts k_SplitedScripts)
+{
+	return _GetSpeaker(k_SplitedScripts);
 }
 
 Script_Analyze::Script_Analyze()

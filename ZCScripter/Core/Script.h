@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -31,7 +31,7 @@ enum SystemScriptTypes
 enum CharacterScriptTypes
 {
 	_UNDEFINED_CharacterScript,
-	PlayVoice //example:％reng2820％
+	PlayVoice //example:％reng2820％//
 };
 
 struct ScriptContent
@@ -129,15 +129,19 @@ private:
 	SplitedScripts _SplitLinesByCRLF();
 	ScriptBlocks _SplitScript(const wchar_t *_ConvertedCRLF = L"\n", unsigned long long _JudgeLines = 15);
 	SortedScripts _SortScript();
-	static SystemScriptTypes _GetSystemScriptType(const SingleScript _k_SplitedScript);
-	static CharacterScriptTypes _GetCharacterScriptType(const SingleScript _k_SplitedScript);
+
+	static std::wstring _GetSpeaker(const SplitedScripts _k_SplitedScripts);
+	static SystemScriptTypes _GetSystemScriptType(const SingleScript _k_SingleScript);
+	static CharacterScriptTypes _GetCharacterScriptType(const SingleScript _k_SingleScript);
 
 public:
 	SplitedScripts SplitLinesByCRLF();
 	ScriptBlocks SplitScript(const wchar_t *ConvertedCRLF = L"\n", unsigned long long JudgeLines = 15);
 	SortedScripts SortScript();
-	static SystemScriptTypes GetSystemScriptType(const SingleScript k_SplitedScripts);
-	static CharacterScriptTypes GetCharacterScriptType(const SingleScript k_SplitedScripts);
+
+	static std::wstring GetSpeaker(const SplitedScripts k_SplitedScripts);
+	static SystemScriptTypes GetSystemScriptType(const SingleScript k_SingleScript);
+	static CharacterScriptTypes GetCharacterScriptType(const SingleScript k_SingleScript);
 	
 	Script_Analyze();
 	Script_Analyze(const char *);
