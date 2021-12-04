@@ -116,14 +116,10 @@ class Script_Analyze
 {
 private:
 	char *_ScriptAddress;
-	long long _Length;
 
 	ScriptContent _ScriptContent;
 	SplitedScripts _LineSplitedScriptContent;
 	ScriptBlocks _ScriptBlocks;
-
-	SystemScripts _SystemScripts;
-	CharacterScripts _CharacterScripts;
 	SortedScripts _SortedScripts;
 
 	SplitedScripts _SplitLinesByCRLF();

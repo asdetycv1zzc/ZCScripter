@@ -126,6 +126,7 @@ SortedScripts Script_Analyze::_SortScript()
 				_temp.Script = _ScriptBlocks.Blocks[i].Scripts[j];
 				_temp.Order = j;
 				_temp.Status = 0;
+				_temp.Speaker = GetSpeaker(_ScriptBlocks.Blocks[i]);
 				_character_part.Blocks.push_back(_temp);
 			}
 		}
@@ -211,7 +212,6 @@ Script_Analyze::Script_Analyze()
 {
 	ScriptContent NULLContent;
 	_ScriptAddress = NULL;
-	_Length = -1;
 	_ScriptContent = NULLContent;
 }
 Script_Analyze::Script_Analyze(const char *k_ScriptAddress)

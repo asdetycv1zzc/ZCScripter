@@ -5,8 +5,8 @@
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [ "msvc_x64_x64" ],
-      "buildRoot": "H:\\Coding\\ZCScripter\\out\\build\\${name}",
-      "installRoot": "H:\\Coding\\ZCScripter\\out\\install\\${name}",
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\ZCScripter\\out\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
@@ -16,8 +16,8 @@
       "generator": "MinGW Makefiles",
       "configurationType": "Debug",
       "inheritEnvironments": [ "gcc_x64" ],
-      "buildRoot": "H:\\Coding\\ZCScripter\\out\\build\\${name}",
-      "installRoot": "H:\\Coding\\ZCScripter\\out\\install\\${name}",
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\ZCScripter\\out\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
