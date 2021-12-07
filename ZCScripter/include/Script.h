@@ -1,7 +1,9 @@
-﻿#include <iostream>
+﻿#pragma once
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
+#include <Assemble.h>
 
 typedef int StatusCode;
 typedef std::wstring SingleScript;
@@ -138,7 +140,7 @@ public:
 	static std::wstring GetSpeaker(const SplitedScripts k_SplitedScripts);
 	static SystemScriptTypes GetSystemScriptType(const SingleScript k_SingleScript);
 	static CharacterScriptTypes GetCharacterScriptType(const SingleScript k_SingleScript);
-	
+
 	Script_Analyze();
 	Script_Analyze(const char *);
 	~Script_Analyze();
@@ -148,4 +150,20 @@ class Script_System
 private:
 	SystemScripts _SystemScripts;
 	SortedScripts _SortedScripts;
+};
+class _Script_Converter
+{
+private:
+	ScriptBlocks _ScriptBlocks;
+	QLIE::_QLIEScripts _QLIEScriptBlocks;
+	QLIE::_QLIEScript _ScriptBlock_TO_QLIEScriptBlock();
+	QLIE::_QLIEScripts _ScriptBlocks_TO_QLIEScriptBLocks();
+
+public:
+	QLIE::_QLIEScript ScriptBlock_TO_QLIEScriptBlock();
+	QLIE::_QLIEScripts ScriptBlocks_TO_QLIEScriptBLocks();
+
+	_Script_Converter();
+	_Script_Converter(const char *);
+	~_Script_Converter();
 };
