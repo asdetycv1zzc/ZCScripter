@@ -87,3 +87,11 @@ namespace QLIE
 		_QLIEScripts _Scripts;
 	};
 };
+class QLIEHelper
+{
+private:
+	static QLIE::_QLIEParameter_NormalForm _GetParameters(const _QLIEScript _k_Script);
+
+public:
+	static QLIE::_QLIEParameter_NormalForm GetParameters(const _QLIEScript k_Script);
+};
