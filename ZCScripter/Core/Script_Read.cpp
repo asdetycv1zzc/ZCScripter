@@ -1,9 +1,9 @@
-#include<iostream>
-#include<fstream>
-#include<string>
-#include<vector>
-#include"Script.h"
-#include"../Converter/Converter.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include "Script.h"
+#include "../Converter/Converter.h"
 using namespace std;
 
 ScriptContent Script_Read::Read()
@@ -24,7 +24,7 @@ ScriptContent Script_Read::_ReadScript()
 		wstring _Content;
 		_Content.resize(_Length, 0);
 
-		while (_File.read((char*)&_TempContent[i], sizeof(wchar_t)))
+		while (_File.read((char *)&_TempContent[i], sizeof(wchar_t)))
 		{
 			_Content[i] = _TempContent[i];
 			i++;
@@ -36,10 +36,11 @@ ScriptContent Script_Read::_ReadScript()
 
 		return _result;
 	}
-	catch (const exception& e)
+	catch (const exception &e)
 	{
 		cerr << e.what() << endl;
-		if (_File.is_open()) _File.close();
+		if (_File.is_open())
+			_File.close();
 		return _result;
 	}
 }
@@ -55,16 +56,17 @@ long long Script_Read::_GetScriptLength()
 		k_FILE.seekg(OriginLocation, ios::beg);
 		return Length;
 	}
-	catch (const exception& e)
+	catch (const exception &e)
 	{
 		cerr << e.what() << endl;
-		if (k_FILE.is_open()) k_FILE.close();
+		if (k_FILE.is_open())
+			k_FILE.close();
 		return -1;
 	}
 }
-void Script_Read::init(const char* k_ScriptAddress)
+void Script_Read::init(const char *k_ScriptAddress)
 {
-	Script_Read::_ScriptAddress = const_cast<char*>(k_ScriptAddress);
+	Script_Read::_ScriptAddress = const_cast<char *>(k_ScriptAddress);
 	Script_Read::_Length = Script_Read::_GetScriptLength();
 	Script_Read::_Content = Script_Read::_ReadScript();
 }
@@ -75,9 +77,9 @@ Script_Read::Script_Read()
 	_Length = -1;
 	_Content = NULLContent;
 }
-Script_Read::Script_Read(const char* k_ScriptAddress)
+Script_Read::Script_Read(const char *k_ScriptAddress)
 {
-	_ScriptAddress = const_cast<char*>(k_ScriptAddress);
+	_ScriptAddress = const_cast<char *>(k_ScriptAddress);
 	_Length = _GetScriptLength();
 	_Content = _ReadScript();
 }

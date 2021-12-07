@@ -24,7 +24,7 @@ string UCS_2_TO_UTF_8(string UCS_2)
 	string _source(UCS_2);
 	string _result;
 
-	long long i = 0;
+	unsigned long long i = 0;
 	while (i < UCS_2.size())
 	{
 		_result.push_back(UCS_2[i]);

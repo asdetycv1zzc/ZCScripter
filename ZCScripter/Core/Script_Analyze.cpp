@@ -193,7 +193,7 @@ wstring Script_Analyze::_GetSpeaker(const SplitedScripts _k_SplitedScripts)
 		auto beginPos = _k_SplitedScripts.Scripts[i].find_first_of(L"【");
 		auto endPos = _k_SplitedScripts.Scripts[i].find_first_of(L"】");
 		if (beginPos != wstring::npos)
-			if (GetCharacterScriptType(_k_SplitedScripts.Scripts[i]) == SystemScriptTypes::_UNDEFINED_SystemScript)
+			if (GetCharacterScriptType(_k_SplitedScripts.Scripts[i]) == CharacterScriptTypes::_UNDEFINED_CharacterScript)
 			{
 				if (_result.empty())
 					_result = _k_SplitedScripts.Scripts[i].substr(beginPos + 1, endPos - beginPos - 1);

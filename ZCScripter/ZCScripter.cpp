@@ -2,8 +2,8 @@
 //
 
 #include <iostream>
-#include "Core/Script.h"
-#include "Converter/Converter.h"
+#include <Assemble.h>
+#include <Script.h>
 using namespace std;
 
 int main()
@@ -12,9 +12,9 @@ int main()
 	//ios_base::sync_with_stdio(false);
 	setlocale(LC_ALL, "chs");
 	auto _output = temp.SplitScript();
-	for (long long i = 0; i < _output.Blocks.size(); i++)
+	for (unsigned long long i = 0; i < _output.Blocks.size(); i++)
 	{
-		for (long long j = 0; j < _output.Blocks[i].ScriptAmount; j++)
+		for (unsigned long j = 0; j < _output.Blocks[i].ScriptAmount; j++)
 		{
 			//std::wcout.imbue(std::locale("chs"));
 			//wcout << _output.Blocks[i].Scripts[j];

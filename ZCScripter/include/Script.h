@@ -8,6 +8,7 @@
 typedef int StatusCode;
 typedef std::wstring SingleScript;
 typedef std::wstring SingleLineOfWords;
+
 enum InputMode
 {
 	byScriptAddress,
