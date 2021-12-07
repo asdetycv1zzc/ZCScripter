@@ -24,7 +24,8 @@ namespace QLIE
 	{
 		_UNDEFINED__QLIEParameterTypes,
 		_INT,
-		_STRING
+		_STRING,
+		_BOOLEAN,
 	};
 	enum _QLIELogicalConditionTypes
 	{
@@ -37,9 +38,12 @@ namespace QLIE
 	struct _QLIEParameter_NormalForm
 	{
 		_QLIEParameterTypes ParameterType = _QLIEParameterTypes::_UNDEFINED__QLIEParameterTypes;
-		unsigned long ParameterCount = 0;
-		std::vector<std::wstring> Parameters_String;
-		std::vector<int> Parameters_Int;
+		std::wstring Parameter;
+	};
+	struct _QLIEParameters
+	{
+		unsigned long ParameterCount = -1;
+		std::vector<_QLIEParameter_NormalForm> Parameters;
 	};
 	struct _QLIEScripts
 	{
@@ -90,8 +94,10 @@ namespace QLIE
 class QLIEHelper
 {
 private:
-	static QLIE::_QLIEParameter_NormalForm _GetParameters(const _QLIEScript _k_Script);
+	static QLIE::_QLIEParameterTypes _GetParameterType(const _QLIEScript _k_Script);
+	static QLIE::_QLIEParameters _GetParameters(const _QLIEScript _k_Script);
 
 public:
-	static QLIE::_QLIEParameter_NormalForm GetParameters(const _QLIEScript k_Script);
+	static QLIE::_QLIEParameterTypes GetParameterType(const _QLIEScript k_Script);
+	static QLIE::_QLIEParameters GetParameters(const _QLIEScript k_Script);
 };
