@@ -152,19 +152,21 @@ private:
 	SystemScripts _SystemScripts;
 	SortedScripts _SortedScripts;
 };
-class _Script_Converter
+class Script_Converter
 {
 private:
 	ScriptBlocks _ScriptBlocks;
 	QLIE::_QLIEScripts _QLIEScriptBlocks;
-	QLIE::_QLIEScript _ScriptBlock_TO_QLIEScriptBlock();
-	QLIE::_QLIEScripts _ScriptBlocks_TO_QLIEScriptBLocks();
+	//QLIE::_QLIEScript _ScriptBlock_TO_QLIEScript();
+	static QLIE::_QLIEScripts _SplitedScripts_TO_QLIEScripts(const SplitedScripts _k_source);
+	QLIE::_QLIEScriptBlocks _ScriptBlocks_TO_QLIEScriptBlocks();
 
 public:
-	QLIE::_QLIEScript ScriptBlock_TO_QLIEScriptBlock();
-	QLIE::_QLIEScripts ScriptBlocks_TO_QLIEScriptBLocks();
+	//QLIE::_QLIEScript ScriptBlock_TO_QLIEScript();
+	static QLIE::_QLIEScripts SplitedScripts_TO_QLIEScripts(const SplitedScripts k_source);
+	QLIE::_QLIEScriptBlocks ScriptBlocks_TO_QLIEScriptBlocks();
 
-	_Script_Converter();
-	_Script_Converter(const char *);
-	~_Script_Converter();
+	Script_Converter();
+	Script_Converter(const char *);
+	~Script_Converter();
 };

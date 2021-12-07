@@ -33,12 +33,7 @@ namespace QLIE
 		_BIGGER_THAN,
 		_SMALLER_THAN,
 	};
-	struct _QLIEScript
-	{
-		unsigned long Order = -1;
-		StatusCode Status = -1;
-		SingleScript Script;
-	};
+
 	struct _QLIEParameter_NormalForm
 	{
 		_QLIEParameterTypes ParameterType = _QLIEParameterTypes::_UNDEFINED__QLIEParameterTypes;
@@ -48,9 +43,15 @@ namespace QLIE
 	};
 	struct _QLIEScripts
 	{
+		unsigned long ScriptAmount = -1;
+		StatusCode Status = -1;
+		std::vector<_QLIEScript> Scripts;
+	};
+	struct _QLIEScriptBlocks
+	{
 		unsigned long BlockAmount = -1;
 		StatusCode Status = -1;
-		std::vector<_QLIEScript> Blocks;
+		std::vector<_QLIEScripts> Scripts;
 	};
 	struct _QLIEFunction_NormalForm
 	{

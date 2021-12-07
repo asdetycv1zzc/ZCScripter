@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include "Script.h"
-#include "../Converter/Converter.h"
+#include <Converter.h>
 using namespace std;
 
 ScriptContent Script_Read::Read()
