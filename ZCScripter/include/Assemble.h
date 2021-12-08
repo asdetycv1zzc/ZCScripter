@@ -26,6 +26,7 @@ namespace QLIE
 		_INT,
 		_STRING,
 		_BOOLEAN,
+		_SYSTEM_SCRIPT,
 	};
 	enum _QLIELogicalConditionTypes
 	{
@@ -33,6 +34,8 @@ namespace QLIE
 		_EQUALS,
 		_BIGGER_THAN,
 		_SMALLER_THAN,
+		_BIGGER_THAN_OR_EQUAL,
+		_SMALLER_THAN_OR_EQUAL,
 	};
 
 	struct _QLIEParameter_NormalForm

@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-	Script_Analyze temp("N:\\1.s");
+	Script_Analyze temp("1.s");
 	//ios_base::sync_with_stdio(false);
 	setlocale(LC_ALL, "chs");
 	auto _output = temp.SplitScript();

@@ -1,0 +1,11 @@
+For Example:
+
+@@k13_01
+\jmp,@@TOP,"Scenario\本編\k13_01.s"
+@@k13_01_end
+
+^fragcal,"([KRroute]==1)"
+\if,FragResultInt==1\then
+	^fragtrack,"@@KRroute01"
+	\jmp,ResultStr[0]
+\end
