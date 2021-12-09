@@ -154,7 +154,7 @@ public:
 	~QLIEVarientPool();
 };
 
-class HashExistedException : exception
+class HashExistedException : public exception
 {
 private:
 	unsigned long _ConflictHash;
