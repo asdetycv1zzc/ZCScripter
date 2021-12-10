@@ -9,7 +9,8 @@
       "installRoot": "${projectDir}\\ZCScripter\\out\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
-      "ctestCommandArgs": ""
+      "ctestCommandArgs": "",
+      "intelliSenseMode": "windows-msvc-x64"
     },
     {
       "name": "gcc-x64-Debug",

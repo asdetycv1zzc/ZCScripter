@@ -116,7 +116,7 @@ private:
 	/*
 	参数里面提供_QLIEVarient类型参数的，提供的是已经指定了Hash的参数，非常不推荐使用
 	建议使用自动的提供_k_Token与_k_Value名称的函数，能够自动管理Hash值
-    */
+	*/
 	/*
 	所有Hash值都从0开始
 	*/
@@ -125,8 +125,13 @@ private:
 	std::vector<QLIE::_QLIEVarient> _Varients;
 	std::vector<std::pair<unsigned long, unsigned long>> _VarientHash_SourceOrder;
 	std::vector<unsigned long> _DeletedHashes;
+	QLIE::_QLIEVarient _NULLVarient;
 
-	static bool _SortVarientByHash(QLIE::_QLIEVarient a, QLIE::_QLIEVarient b);
+	static bool _CmpVarientByHash(QLIE::_QLIEVarient a, QLIE::_QLIEVarient b);
+	void _SortVarientByHash();
+	void _SortVarientByHash(std::vector<QLIE::_QLIEVarient>::const_iterator _k_begin, std::vector<std::allocator< QLIE::_QLIEVarient>::value_type>::const_iterator _k_end);
+	void _SortVarientByHash_Reversed();
+	void _SortVarientByHash_Reversed(std::reverse_iterator<std::vector<QLIE::_QLIEVarient>::iterator> _k_rbegin, std::reverse_iterator<std::vector<QLIE::_QLIEVarient>::iterator> _k_rend);
 
 	bool _AddVarient(QLIE::_QLIEVarient _k_Varient);
 	bool _AddVarient(std::wstring _k_Token, std::wstring _k_Value, QLIE::_QLIEParameterTypes _k_Type = QLIE::_QLIEParameterTypes::_UNDEFINED__QLIEParameterTypes);
@@ -135,18 +140,27 @@ private:
 	bool _DeleteVarient(std::wstring _k_Token, std::wstring _k_Value);
 	bool _DeleteVarient(unsigned long _k_Hash);
 	bool _DeleteVarient(unsigned long _k_Hash, std::wstring _k_Value);
-	bool _HashIsExist(unsigned long _k_Hash);
-	void _SortVarient();
-	unsigned long _GetVarientAmount();
+	bool _SetVarient(QLIE::_QLIEVarient _k_SourceVarient, QLIE::_QLIEVarient _k_DestVarient);
+	bool _SetVarient(QLIE::_QLIEVarient* _k_SourceVarientPointer, QLIE::_QLIEVarient _k_DestVarient);
+	bool _SetVarient(unsigned long _k_Hash, std::wstring _k_Token, std::wstring _k_Value);
+	bool _SetVarient(unsigned long _k_Hash, std::wstring _k_Value);
+	bool _SetVarient(unsigned long _k_Hash, QLIE::_QLIEVarient _k_DestVarient);
 
-	unsigned long _AllocateNewHash();
+	bool _HashIsExist(unsigned long _k_Hash);
+	bool _Check_TokenHashPaired(unsigned long _k_Hash, std::wstring _k_Token);
+	
+	const unsigned long _GetVarientAmount();
+	const unsigned long _AllocateNewHash();
 
 	QLIE::_QLIEVarient _GetVarient(std::wstring _k_Token);
 	QLIE::_QLIEVarient _GetVarient(unsigned long _k_Hash);
 	QLIE::_QLIEVarient _GetVarient(std::wstring _k_Token, unsigned long _k_Hash);
-	QLIE::_QLIEVarient *_GetVarientPointer(std::wstring _k_Token);
-	QLIE::_QLIEVarient *_GetVarientPointer(unsigned long _k_Hash);
-	QLIE::_QLIEVarient *_GetVarientPointer(std::wstring _k_Token, unsigned long _k_Hash);
+	const QLIE::_QLIEVarient* _GetVarientPointer(std::wstring _k_Token);
+	const QLIE::_QLIEVarient* _GetVarientPointer(unsigned long _k_Hash);
+	const QLIE::_QLIEVarient* _GetVarientPointer(std::wstring _k_Token, unsigned long _k_Hash);
+
+	unsigned long _GetHash(std::wstring _k_Token);
+	unsigned long _GetHash(std::wstring _k_Token, std::wstring _k_Value);
 
 public:
 	QLIEVarientPool();
@@ -154,11 +168,11 @@ public:
 	~QLIEVarientPool();
 };
 
-class HashExistedException : public exception
+class HashExistedException : public std::exception
 {
 private:
 	unsigned long _ConflictHash;
 
 public:
 	unsigned long GetConflictHash();
-}
+};
