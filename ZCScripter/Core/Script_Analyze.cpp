@@ -6,6 +6,22 @@
 #include "Script.h"
 using namespace std;
 
+size_t wstrlen(const wchar_t* _a)
+{
+	size_t _result = 0;
+	while (*(_a + _result) != L'\0') _result += 1;
+	return _result;
+}
+bool wstrcmp(const wchar_t* _a, const wchar_t* _b)
+{
+	if (wstrlen(_a) != wstrlen(_b)) return false;
+	auto _size = wstrlen(_a);
+	for (size_t i = 0; i < _size; i++)
+	{
+		if (*(_a + i) != *(_b + i)) return false;
+	}
+	return true;
+}
 SplitedScripts Script_Analyze::_SplitLinesByCRLF()
 {
 	wstring _temp(_ScriptContent.Content), buffer;
@@ -41,7 +57,7 @@ SplitedScripts Script_Analyze::SplitLinesByCRLF()
 	return _SplitLinesByCRLF();
 }
 
-ScriptBlocks Script_Analyze::_SplitScript(const wchar_t *_ConvertedCRLF, unsigned long long _JudgeLines)
+ScriptBlocks Script_Analyze::_SplitScript(const wchar_t* _ConvertedCRLF, unsigned long long _JudgeLines)
 {
 	vector<wstring> _source(_LineSplitedScriptContent.Scripts);
 	ScriptBlocks _result;
@@ -98,7 +114,7 @@ ScriptBlocks Script_Analyze::_SplitScript(const wchar_t *_ConvertedCRLF, unsigne
 
 	return _result;
 }
-ScriptBlocks Script_Analyze::SplitScript(const wchar_t *ConvertedCRLF, unsigned long long JudgeLines)
+ScriptBlocks Script_Analyze::SplitScript(const wchar_t* ConvertedCRLF, unsigned long long JudgeLines)
 {
 	return _SplitScript(ConvertedCRLF, JudgeLines);
 }
@@ -107,33 +123,46 @@ SortedScripts Script_Analyze::_SortScript()
 {
 	SystemScripts _system_part;
 	CharacterScripts _character_part;
+	SortedScripts _result;
 	for (unsigned long long i = 0; i < _ScriptBlocks.BlockAmount; i++)
 	{
 		for (unsigned long long j = 0; j < _ScriptBlocks.Blocks[i].ScriptAmount; j++)
 		{
-			if (_ScriptBlocks.Blocks[i].Scripts[j][0] == L'^')
+			if (_ScriptBlocks.Blocks[i].Scripts[j][0] == L'^' || (_ScriptBlocks.Blocks[i].Scripts[j][0] == L'@' && _ScriptBlocks.Blocks[i].Scripts[j][1] == L'@'))
 			{
 				SystemScript _temp;
 				_temp.Script = _ScriptBlocks.Blocks[i].Scripts[j];
-				_temp.Order = j;
+				_temp.Order = i;
 				_temp.Status = 0;
 				_temp.ScriptType = GetSystemScriptType(_ScriptBlocks.Blocks[i].Scripts[j]);
+				_temp._command = QLIEHelper::GetCommand(_temp.Script);
+				_temp._parameters = QLIEHelper::GetParameters(_temp.Script);
 				_system_part.Blocks.push_back(_temp);
+				pair<unsigned long long, short> _temp_map;
+				_temp_map.first = _system_part.Blocks.size() - 1;
+				_temp_map.second = 0;
+				_result._Typetable[i] = _temp_map;
 			}
 			else
 			{
 				CharacterScript _temp;
 				_temp.Script = _ScriptBlocks.Blocks[i].Scripts[j];
-				_temp.Order = j;
+				_temp.Order = i;
 				_temp.Status = 0;
 				_temp.Speaker = GetSpeaker(_ScriptBlocks.Blocks[i]);
+				if (wstrcmp((L"【" + _temp.Speaker + L"】").c_str(), _temp.Script.c_str()))_temp.Script = L"";
 				_character_part.Blocks.push_back(_temp);
+				pair<unsigned long long, short> _temp_map;
+				_temp_map.first = _character_part.Blocks.size() - 1;
+				_temp_map.second = 1;
+				_result._Typetable[i] = _temp_map;
 			}
 		}
 	}
 	_system_part.BlockAmount = _system_part.Blocks.size();
 	_character_part.BlockAmount = _character_part.Blocks.size();
-	SortedScripts _result;
+	_system_part.Status = 0;
+	_character_part.Status = 0;
 	_result._CharacterScripts = _character_part;
 	_result._SystemScripts = _system_part;
 	_result.BlockAmount = _result._CharacterScripts.BlockAmount + _result._SystemScripts.BlockAmount;
@@ -157,14 +186,30 @@ SystemScriptTypes Script_Analyze::_GetSystemScriptType(const SingleScript _k_Spl
 		return SystemScriptTypes::SetMusic;
 	if (_command.find(L"^sentence") != wstring::npos)
 		return SystemScriptTypes::SetSentenceEffects;
+	if (_command.find(L"^select") != wstring::npos)
+		return SystemScriptTypes::SetSelect;
 	if (_command.find(L"^se") != wstring::npos)
-		return SystemScriptTypes::__UnknownScript1;
+		return SystemScriptTypes::SetSound;
 	if (_command.find(L"^camera") != wstring::npos)
 		return SystemScriptTypes::SetCamera;
 	if (_command.find(L"include") != wstring::npos)
 		return SystemScriptTypes::SetPostScript;
 	if (_command.find(L"^face") != wstring::npos)
-		return SystemScriptTypes::__UnknownScript2;
+		return SystemScriptTypes::SetCharacterFace;
+	if (_command.find(L"^textani") != wstring::npos)
+		return SystemScriptTypes::__UNKNOWN_SCRIPT3;
+	if (_command.find(L"^message") != wstring::npos)
+		return SystemScriptTypes::SetMessageBox;
+	if (_command.find(L"^ef") != wstring::npos)
+		return SystemScriptTypes::SetEffect;
+	if (_command.find(L"\\jmp") != wstring::npos)
+		return SystemScriptTypes::_JMP;
+	if (_command.find(L"\\sub") != wstring::npos)
+		return SystemScriptTypes::_SUB;
+	if (_command.find(L"@@") != wstring::npos && _command.find(L"@@@") == wstring::npos)
+		return SystemScriptTypes::SetEntryName;
+	if (_command.find(L"@@@") != wstring::npos)
+		return SystemScriptTypes::SetIncludeFile;
 	return SystemScriptTypes::_UNDEFINED_SystemScript;
 }
 SystemScriptTypes Script_Analyze::GetSystemScriptType(const SingleScript k_SplitedScript)
@@ -214,9 +259,9 @@ Script_Analyze::Script_Analyze()
 	_ScriptAddress = NULL;
 	_ScriptContent = NULLContent;
 }
-Script_Analyze::Script_Analyze(const char *k_ScriptAddress)
+Script_Analyze::Script_Analyze(const char* k_ScriptAddress)
 {
-	_ScriptAddress = const_cast<char *>(k_ScriptAddress);
+	_ScriptAddress = const_cast<char*>(k_ScriptAddress);
 	_ScriptContent = Script_Read(k_ScriptAddress).Read();
 	_LineSplitedScriptContent = SplitLinesByCRLF();
 	_ScriptBlocks = SplitScript();

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <Assemble.h>
+#include <map>
 
 typedef int StatusCode;
 typedef std::wstring SingleScript;
@@ -16,25 +17,39 @@ enum InputMode
 };
 enum SystemScriptTypes
 {
+	//------------------------------
+	//Non-Engine System Script Types
 	_UNDEFINED_SystemScript,
 	SetPostScript,		//example:^include,allset
 	SetBackground,		//example:^bg01,$zoom_near,scalex:120,scaley:120
 	SetMusic,			//example:^music01,file:12切ない曲
 	SetCharacterModel,	//example:^chara01,file0:夏彦_,file1:小_,file2:制服_,file3:001通常01,show:true,alpha:128
-						//^chara01,addcolor:$FFFFFF
-						//^chara01,file0:none
-						//^chara01,file3:082泣き3
+								//^chara01,addcolor:$FFFFFF
+								//^chara01,file0:none
+								//^chara01,file3:082泣き3
 	SetSentenceEffects, //example:^sentence,fademode:overlap,fadetime:1000
-						//^sentence,$overlap
-	__UnknownScript1,	//example:^se03,file:●波羅密多_loop,loop:true,vol:20
-						//^se03,vol:10,oncetime:2000
+								//^sentence,$overlap
+	SetSound,			//example:^se03,file:●波羅密多_loop,loop:true,vol:20
+								//^se03,vol:10,oncetime:2000
 	SetCamera,			//example:^camera,genfilter:"mode:abssin,cycle:500,fade:none,time:250,delay:0,infinity:false,target:position,x:0,y:0,z:-10"
-	__UnknownScript2	//example:^face,show:false
+	SetCharacterFace,	//example:^face,show:false
+	SetEntryName,		//example:@@MAIN
+	SetIncludeFile,		//example:@@@Avg\Header.s
+	SetSelect,			//example:^select,回应月丘女士的心情,果断拒绝
+	SetSelectLabel,		//example:^selectlabel,"@@k01_01sel_0","@@k01_01sel_1"
+	__UNKNOWN_SCRIPT3,	//example:^textani,file:none
+	SetMessageBox,		//example:^message,show:false
+	SetEffect,			//example:^ef02,file:立ち絵/香恋_胸
+
+	//------------------------------
+	//Engine-related System Script Types
+	_JMP,				//example:\jmp,Avg_SelectCurLabel
+	_SUB,				//example:\sub,@@!KRouteJmp,"Scenario\Root.s",SelfFileName,01
 };
 enum CharacterScriptTypes
 {
 	_UNDEFINED_CharacterScript,
-	PlayVoice //example:％reng2820％//
+	PlayVoice			//example:％reng2820％
 };
 
 struct ScriptContent
@@ -49,6 +64,7 @@ struct SplitedScripts
 	unsigned long ScriptAmount = -1;
 	StatusCode Status = -1;
 	std::vector<SingleScript> Scripts;
+	//std::wstring Speaker;
 };
 struct ScriptBlocks
 {
@@ -62,6 +78,8 @@ struct SystemScript
 	StatusCode Status = -1;
 	SystemScriptTypes ScriptType = SystemScriptTypes::_UNDEFINED_SystemScript;
 	SingleScript Script;
+	std::wstring _command;
+	QLIE::_QLIEParameters _parameters;
 };
 struct CharacterScript
 {
@@ -81,6 +99,7 @@ struct CharacterScripts
 {
 	unsigned long BlockAmount = -1;
 	StatusCode Status = -1;
+	//std::wstring Speaker;
 	std::vector<CharacterScript> Blocks;
 };
 struct SortedScriptBlock
@@ -95,6 +114,7 @@ struct SortedScripts
 {
 	StatusCode Status = -1;
 	unsigned long BlockAmount = -1;
+	std::map<unsigned long long, std::pair<unsigned long long,short> > _Typetable;
 	SystemScripts _SystemScripts;
 	CharacterScripts _CharacterScripts;
 };

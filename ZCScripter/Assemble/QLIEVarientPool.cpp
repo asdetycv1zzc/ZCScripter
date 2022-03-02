@@ -7,6 +7,7 @@
 #include <types.h>
 using namespace std;
 
+/*
 bool QLIEVarientPool::_CmpVarientByHash(QLIE::_QLIEVarient a, QLIE::_QLIEVarient b)
 {
     return a._Hash < b._Hash;
@@ -17,7 +18,7 @@ void QLIEVarientPool::_SortVarientByHash()
 }
 bool QLIEVarientPool::_AddVarient(QLIE::_QLIEVarient _k_Varient)
 {
-    if (_HashIsExist(_k_Varient._Hash))
+    if (_Check_HashIsExist(_k_Varient._Hash))
         return false;
     _Varients.push_back(_k_Varient);
     return true;
@@ -34,7 +35,7 @@ bool QLIEVarientPool::_AddVarient(std::wstring _k_Token, std::wstring _k_Value, 
 }
 bool QLIEVarientPool::_AddVarient(unsigned long _k_Hash, std::wstring _k_Value, QLIE::_QLIEParameterTypes _k_Type)
 {
-    if (_HashIsExist(_k_Hash))
+    if (_Check_HashIsExist(_k_Hash))
         return false;
     QLIE::_QLIEVarient _temp;
     _temp.Token = L"_Unspecified";
@@ -45,7 +46,7 @@ bool QLIEVarientPool::_AddVarient(unsigned long _k_Hash, std::wstring _k_Value, 
 }
 bool QLIEVarientPool::_DeleteVarient(QLIE::_QLIEVarient _k_Varient)
 {
-    if (!_HashIsExist(_k_Varient._Hash))
+    if (!_Check_HashIsExist(_k_Varient._Hash))
         return false;
     _SetVarient(_k_Varient._Hash, _NULLVarient);
     _DeletedHashes.push_back(_k_Varient._Hash);
@@ -53,11 +54,23 @@ bool QLIEVarientPool::_DeleteVarient(QLIE::_QLIEVarient _k_Varient)
 }
 bool QLIEVarientPool::_DeleteVarient(std::wstring _k_Token, std::wstring _k_Value)
 {
-    if(!_Check_TokenHashPaired(_GetHash(_k_Token),_k_Token)
+    auto _temp_Hash = _GetHashByToken(_k_Token);
+    if(!_Check_TokenValuePaired(_GetTokenByValue(_k_Token),_k_Value))
+        return false;
+    if (_Check_VarientIsDeleted(_temp_Hash))
+        return false;
+    _DeletedHashes.push_back(_temp_Hash);
+    return true;
 }
 bool QLIEVarientPool::_DeleteVarient(unsigned long _k_Hash)
 {
+    if (_Check_VarientIsDeleted(_k_Hash))
+        return false;
+    _DeletedHashes.push_back(_k_Hash);
+    return true;
 }
 bool QLIEVarientPool::_DeleteVarient(unsigned long _k_Hash, std::wstring _k_Value)
 {
+    return false;
 }
+*/
