@@ -5,6 +5,7 @@
 #include<Script.h>
 #include<Translator.h>
 #include<wstring_extend.h>
+#include<global.h>
 using namespace std;
 
 const bool _cmpByFileNum(const QLIE::_QLIEParameter_NormalForm& _a, const QLIE::_QLIEParameter_NormalForm& _b)
@@ -71,7 +72,7 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 			}
 			
 		}
-		_krkr_script = L"@bg method=\"" + wstring(DEFAULT_BACKGROUND_SWITCH_METHOD) + L"\" storage=\"" + _filename + L"\"";
+		_krkr_script = L"@bg method=\"" + _bgSwitchMode + L"\" storage=\"" + _filename + L"\"";
 		break;
 	}
 	case SystemScriptTypes::SetSound:
@@ -84,25 +85,50 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 	}
 	case SystemScriptTypes::SetCharacterModel:
 	{
+		wstring _allFilename = L"", _tempFilename;
+		wstring _alpha;
+		bool _NoAlpha = true;
 		QLIE::_QLIEParameters _tempPara;
 		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
 		{
 			if (wstrcmp(_k_source._parameters.Parameters[i].Parameter.substr(0, 4).c_str(), L"file"))
+			{
 				_tempPara.Parameters.push_back(_k_source._parameters.Parameters[i]);
+			}
+			if (wstrcmp(_k_source._parameters.Parameters[i].Parameter.substr(0, 5).c_str(), L"alpha") && _NoAlpha)
+			{
+				_NoAlpha = false;
+				_alpha = _k_source._parameters.Parameters[i].Parameter.substr(_k_source._parameters.Parameters[i].Parameter.find_first_of(L':') + 1);
+			}
 		}
-		sort(_tempPara.Parameters.begin(), _tempPara.Parameters.end(), _cmpByFileNum);
 		_tempPara.ParameterCount = _tempPara.Parameters.size();
-		wstring _allFilename = L"", _tempFilename;
+		sort(_tempPara.Parameters.begin(), _tempPara.Parameters.end(), _cmpByFileNum);
+		auto _testNum = _tempPara.Parameters[_tempPara.ParameterCount - 1].Parameter[_tempPara.Parameters[_tempPara.ParameterCount - 1].Parameter.find_first_of(L':') - 1] - L'0' + 1;
+		if (_tempPara.ParameterCount != _testNum)
+		{
+			auto _LastUsedCharacter = g_AppearedCharacterModelNames[g_AppearedCharacterModelNames.size() - 1];
+			auto _temp = splitwstr(_LastUsedCharacter, DEFAULT_CHARACTER_SEPERATE_CHAR);
+			throw exception();
+		}
+		
 		for (size_t i = 0; i < _tempPara.ParameterCount; i++)
 		{
 			_tempFilename = _tempPara.Parameters[i].Parameter.substr(_tempPara.Parameters[i].Parameter.find_first_of(L':') + 1);
 			_allFilename.append(_tempFilename);
 		}
+		_krkr_script.append(L"@fg ");
+		if (!_NoAlpha)
+			_krkr_script.append(L"opcacity=\"" + _alpha + L"\" ");
+		_krkr_script.append(L"layer=\"" + wstring(DEFAULT_CHARACTER_LAYER) + L"\" ");
+		_krkr_script.append(L"method=\"" + wstring(DEFAULT_CHARACTER_SWITCH_METHOD) + L"\" ");
+		_krkr_script.append(L"storage=\"" + _allFilename + L"\"");
 		break;
 	}
 	}
-	vector<wstring> _result(1);
-	_result[0] = _krkr_script;
+	vector<wstring> _result;
+	if (_krkr_script == L"")
+		_krkr_script = L"NULL";
+	_result.push_back(_krkr_script);
 	return _result;
 }
 const vector<wstring> Script_Translator::s_From_QLIESystem_To_KRKRSystem(const SystemScript& k_source)

@@ -9,5 +9,5 @@ aux_source_directory(./Core DIRSRCS)
 aux_source_directory(./Converter DIRSRCS)
 aux_source_directory(./Assemble DIRSRCS)
 
-add_executable(ZCScripter ${DIRSRCS} "Core/Script_Translator.cpp" "include/Translator.h" "Converter/wstring_extend.cpp" "include/wstring_extend.h")
+add_executable(ZCScripter ${DIRSRCS} "Core/Script_Translator.cpp" "include/Translator.h" "Converter/wstring_extend.cpp" "include/wstring_extend.h" "include/global.h")
 # TODO: 如有需要，请添加测试并安装目标。

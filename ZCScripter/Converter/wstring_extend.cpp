@@ -1,5 +1,6 @@
 #include<iostream>
 #include<string>
+#include<vector>
 #include<wstring_extend.h>
 using namespace std;
 
@@ -18,4 +19,18 @@ bool wstrcmp(const wchar_t* _a, const wchar_t* _b)
 		if (*(_a + i) != *(_b + i)) return false;
 	}
 	return true;
+}
+vector<wstring> splitwstr(const wstring& _source, const wstring& _seperate)
+{
+	vector<wstring> _result;
+	auto _seperate_size = _seperate.size();
+	size_t beginPos = 0, endPos,_size;
+	while (_source.find(_seperate, beginPos) != wstring::npos)
+	{
+		endPos = _source.find(_seperate, beginPos);
+		_size = endPos - beginPos;
+		_result.push_back(_source.substr(beginPos, _size));
+		beginPos = endPos + _seperate_size;
+	}
+	return _result;
 }

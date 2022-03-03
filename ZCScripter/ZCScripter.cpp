@@ -15,27 +15,31 @@ int main()
 	//auto _output = temp.SplitScript();
 	auto _output = temp.SortScript();
 	
-
-	for (unsigned long j = 0; j < _output.BlockAmount; j++)
+	vector<wstring> _test1;
+	_test1.reserve(100000);
+	for (unsigned long j = 24; j < _output.BlockAmount; j++)
 	{
 		//std::wcout.imbue(std::locale("chs"));
 		//wcout << _output.Blocks[i].Scripts[j];
 		//wprintf(L"%s\n", Script_Analyze::GetSpeaker(_output.Blocks[i]).c_str());
 		//wprintf(L"%s\n", _output.Blocks[i].Scripts[j].c_str());
-		vector<wstring> _test1;
+		
 		if (_output._Typetable[j].second == 0)
 		{
-			_test1 = vector<wstring>(Script_Translator::s_From_QLIESystem_To_KRKRSystem(_output._SystemScripts.Blocks[_output._Typetable[j].first]));
+			auto _temp = vector<wstring>(Script_Translator::s_From_QLIESystem_To_KRKRSystem(_output._SystemScripts.Blocks[_output._Typetable[j].first]));
+			_test1.assign(_temp.begin(), _temp.end());
 		}
 		else
 		{
-			_test1 = vector<wstring>(Script_Translator::s_From_QLIECharacter_To_KRKRCharacter(_output._CharacterScripts.Blocks[_output._Typetable[j].first]));
+			auto _temp = vector<wstring>(Script_Translator::s_From_QLIECharacter_To_KRKRCharacter(_output._CharacterScripts.Blocks[_output._Typetable[j].first]));
+			_test1.assign(_temp.begin(), _temp.end());
 		}
 		
 		for (unsigned long k = 0; k < _test1.size(); k++)
 		{
 			wprintf(L"%s\n", _test1[k].c_str());
 		}
+		_test1.clear();
 		//wprintf(L"%s\n", _output._CharacterScripts.Blocks[j].Script.c_str());
 	}
 	wprintf(L"\n");
