@@ -87,6 +87,7 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 	{
 		wstring _allFilename = L"", _tempFilename;
 		wstring _alpha;
+		bool _RequireRebuild = false;
 		bool _NoAlpha = true;
 		QLIE::_QLIEParameters _tempPara;
 		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
@@ -102,16 +103,34 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 			}
 		}
 		_tempPara.ParameterCount = _tempPara.Parameters.size();
-		sort(_tempPara.Parameters.begin(), _tempPara.Parameters.end(), _cmpByFileNum);
-		auto _testNum = _tempPara.Parameters[_tempPara.ParameterCount - 1].Parameter[_tempPara.Parameters[_tempPara.ParameterCount - 1].Parameter.find_first_of(L':') - 1] - L'0' + 1;
-		if (_tempPara.ParameterCount != _testNum)
+		if (_tempPara.ParameterCount != 0)
 		{
-			auto _LastUsedCharacter = g_AppearedCharacterModelNames[g_AppearedCharacterModelNames.size() - 1];
-			auto _temp = splitwstr(_LastUsedCharacter, DEFAULT_CHARACTER_SEPERATE_CHAR);
-			throw exception();
+			_RequireRebuild = true;
+			sort(_tempPara.Parameters.begin(), _tempPara.Parameters.end(), _cmpByFileNum);
+			auto _testNum = _tempPara.Parameters[_tempPara.ParameterCount - 1].Parameter[_tempPara.Parameters[_tempPara.ParameterCount - 1].Parameter.find_first_of(L':') - 1] - L'0' + 1;
+			if (_tempPara.ParameterCount != _testNum)
+			{
+				vector<pair<int,wstring> > _modify_list(_tempPara.ParameterCount);
+				for (size_t i = 0; i < _tempPara.ParameterCount; i++)
+				{
+					//找到需要拆分修改的编号
+					auto _hash = _tempPara.Parameters[i].Parameter[_tempPara.Parameters[i].Parameter.find_first_of(L':') - 1] - L'0';
+					_modify_list[i].first = _hash;
+					_modify_list[i].second = _tempPara.Parameters[i].Parameter.substr(_tempPara.Parameters[i].Parameter.find_first_of(L':') + 1);
+				}
+				auto _LastUsedCharacter = g_AppearedCharacterModelNames[g_AppearedCharacterModelNames.size() - 1];
+				auto _splitedLastUsedCharacter = splitwstr(_LastUsedCharacter, DEFAULT_CHARACTER_SEPERATE_CHAR);
+				for (size_t i = 0; i < _tempPara.ParameterCount; i++)
+					_splitedLastUsedCharacter[_modify_list[i].first - 1] = _modify_list[i].second;
+
+				//重建文件名
+				for (size_t i = 0; i < _splitedLastUsedCharacter.size(); i++)
+					_allFilename.append(_splitedLastUsedCharacter[i] + L"_");
+				_allFilename = _allFilename.substr(0, _allFilename.size() - 1);
+				
+			}
 		}
-		
-		for (size_t i = 0; i < _tempPara.ParameterCount; i++)
+		for (size_t i = 0; i < _tempPara.ParameterCount && !_RequireRebuild; i++)
 		{
 			_tempFilename = _tempPara.Parameters[i].Parameter.substr(_tempPara.Parameters[i].Parameter.find_first_of(L':') + 1);
 			_allFilename.append(_tempFilename);
@@ -122,6 +141,12 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 		_krkr_script.append(L"layer=\"" + wstring(DEFAULT_CHARACTER_LAYER) + L"\" ");
 		_krkr_script.append(L"method=\"" + wstring(DEFAULT_CHARACTER_SWITCH_METHOD) + L"\" ");
 		_krkr_script.append(L"storage=\"" + _allFilename + L"\"");
+		if (_allFilename.empty())
+		{
+			_krkr_script.clear(); //连文件都没有就更不用说别的了 直接全删掉
+		}
+		else
+			g_AppearedCharacterModelNames.push_back(_allFilename);
 		break;
 	}
 	}

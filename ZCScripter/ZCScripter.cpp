@@ -26,7 +26,8 @@ int main()
 		
 		if (_output._Typetable[j].second == 0)
 		{
-			auto _temp = vector<wstring>(Script_Translator::s_From_QLIESystem_To_KRKRSystem(_output._SystemScripts.Blocks[_output._Typetable[j].first]));
+			auto _test_p = _output._SystemScripts.Blocks[_output._Typetable[j].first];
+			auto _temp = vector<wstring>(Script_Translator::s_From_QLIESystem_To_KRKRSystem(_test_p));
 			_test1.assign(_temp.begin(), _temp.end());
 		}
 		else
