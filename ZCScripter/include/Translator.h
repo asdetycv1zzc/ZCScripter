@@ -9,6 +9,7 @@ constexpr auto DEFAULT_BACKGROUND_SWITCH_METHOD = L"crossfade";
 constexpr auto DEFAULT_CHARACTER_SWITCH_METHOD = L"crossfade";
 constexpr auto DEFAULT_CHARACTER_LAYER = L"0";
 constexpr auto DEFAULT_CHARACTER_SEPERATE_CHAR = L"_";
+constexpr auto DEFAULT_CHARACTER_POSITION = L"center";
 
 class Script_Translator
 {

@@ -16,7 +16,7 @@ int main()
 	auto _output = temp.SortScript();
 	
 	vector<wstring> _test1;
-	_test1.reserve(100000);
+	//_test1.reserve(100000);
 	for (unsigned long j = 0; j < _output.BlockAmount; j++)
 	{
 		//std::wcout.imbue(std::locale("chs"));

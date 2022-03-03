@@ -59,8 +59,8 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 			if (_k_source._parameters.Parameters[i].Parameter.substr(0,5) == L"file:")
 			{
 				_filename = wstring(_k_source._parameters.Parameters[i].Parameter.substr(_k_source._parameters.Parameters[i].Parameter.find_last_of(L"/") + 1));
-				if (_filename == L"none") 
-					_filename = DEFAULT_BACKGROUND;
+				if (_filename.find(L":none") != wstring::npos)
+					_filename = wstring(DEFAULT_BACKGROUND);
 			}
 			if (_k_source._parameters.Parameters[i].Parameter[0] == L'$')
 			{
@@ -105,11 +105,11 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 		_tempPara.ParameterCount = _tempPara.Parameters.size();
 		if (_tempPara.ParameterCount != 0)
 		{
-			_RequireRebuild = true;
 			sort(_tempPara.Parameters.begin(), _tempPara.Parameters.end(), _cmpByFileNum);
 			auto _testNum = _tempPara.Parameters[_tempPara.ParameterCount - 1].Parameter[_tempPara.Parameters[_tempPara.ParameterCount - 1].Parameter.find_first_of(L':') - 1] - L'0' + 1;
 			if (_tempPara.ParameterCount != _testNum)
 			{
+				_RequireRebuild = true;
 				vector<pair<int,wstring> > _modify_list(_tempPara.ParameterCount);
 				for (size_t i = 0; i < _tempPara.ParameterCount; i++)
 				{
@@ -117,16 +117,36 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 					auto _hash = _tempPara.Parameters[i].Parameter[_tempPara.Parameters[i].Parameter.find_first_of(L':') - 1] - L'0';
 					_modify_list[i].first = _hash;
 					_modify_list[i].second = _tempPara.Parameters[i].Parameter.substr(_tempPara.Parameters[i].Parameter.find_first_of(L':') + 1);
+					if (_modify_list[i].second.find(L"_") != wstring::npos)
+						_modify_list[i].second = _modify_list[i].second.substr(0, _modify_list[i].second.size() - 1);
 				}
 				auto _LastUsedCharacter = g_AppearedCharacterModelNames[g_AppearedCharacterModelNames.size() - 1];
-				auto _splitedLastUsedCharacter = splitwstr(_LastUsedCharacter, DEFAULT_CHARACTER_SEPERATE_CHAR);
+				auto _temp_splitedLastUsedCharacter = splitwstr(_LastUsedCharacter, DEFAULT_CHARACTER_SEPERATE_CHAR);
+				vector<wstring> _splitedLastUsedCharacter(_temp_splitedLastUsedCharacter.size(),L"");
+				for (size_t i = 0; i < _temp_splitedLastUsedCharacter.size(); i++)
+					_splitedLastUsedCharacter[i] = _temp_splitedLastUsedCharacter[i];
 				for (size_t i = 0; i < _tempPara.ParameterCount; i++)
-					_splitedLastUsedCharacter[_modify_list[i].first - 1] = _modify_list[i].second;
+				{
+					while (_splitedLastUsedCharacter.size() <= _modify_list[i].first)
+						_splitedLastUsedCharacter.resize(_modify_list[i].first + 1);
+					_splitedLastUsedCharacter[_modify_list[i].first] = _modify_list[i].second;
+				}
+				for (auto i = _splitedLastUsedCharacter.begin();i != _splitedLastUsedCharacter.end();)
+				{
+					if (*i == L"")
+						i = _splitedLastUsedCharacter.erase(i);
+					else
+						i++;
+				}
 
 				//重建文件名
 				for (size_t i = 0; i < _splitedLastUsedCharacter.size(); i++)
 					_allFilename.append(_splitedLastUsedCharacter[i] + L"_");
 				_allFilename = _allFilename.substr(0, _allFilename.size() - 1);
+				if (_allFilename.find(L"__") != wstring::npos)
+				{
+					_allFilename.substr();
+				}
 				
 			}
 		}
@@ -135,12 +155,23 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 			_tempFilename = _tempPara.Parameters[i].Parameter.substr(_tempPara.Parameters[i].Parameter.find_first_of(L':') + 1);
 			_allFilename.append(_tempFilename);
 		}
-		_krkr_script.append(L"@fg ");
-		if (!_NoAlpha)
-			_krkr_script.append(L"opcacity=\"" + _alpha + L"\" ");
-		_krkr_script.append(L"layer=\"" + wstring(DEFAULT_CHARACTER_LAYER) + L"\" ");
-		_krkr_script.append(L"method=\"" + wstring(DEFAULT_CHARACTER_SWITCH_METHOD) + L"\" ");
-		_krkr_script.append(L"storage=\"" + _allFilename + L"\"");
+		if (_allFilename.find(L"none") == wstring::npos)
+		{
+			_krkr_script.append(L"@fg ");
+			if (!_NoAlpha)
+				_krkr_script.append(L"opcacity=\"" + _alpha + L"\" ");
+			_krkr_script.append(L"layer=\"" + wstring(DEFAULT_CHARACTER_LAYER) + L"\" ");
+			_krkr_script.append(L"method=\"" + wstring(DEFAULT_CHARACTER_SWITCH_METHOD) + L"\" ");
+			_krkr_script.append(L"storage=\"" + _allFilename + L"\"");
+			
+		}
+		else
+		{
+			_krkr_script.append(L"@clfg ");
+			_krkr_script.append(L"layer=\"" + wstring(DEFAULT_CHARACTER_LAYER) + L"\" ");
+			_krkr_script.append(L"method=\"" + wstring(DEFAULT_CHARACTER_SWITCH_METHOD) + L"\" ");
+			_krkr_script.append(L"pos=\"" + wstring(DEFAULT_CHARACTER_POSITION) + L"\" ");
+		}
 		if (_allFilename.empty())
 		{
 			_krkr_script.clear(); //连文件都没有就更不用说别的了 直接全删掉
@@ -151,8 +182,6 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 	}
 	}
 	vector<wstring> _result;
-	if (_krkr_script == L"")
-		_krkr_script = L"NULL";
 	_result.push_back(_krkr_script);
 	return _result;
 }
