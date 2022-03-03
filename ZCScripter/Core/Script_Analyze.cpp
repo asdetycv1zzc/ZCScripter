@@ -3,25 +3,11 @@
 #include <string>
 #include <vector>
 #include <cstring>
+#include <wstring_extend.h>
 #include "Script.h"
 using namespace std;
 
-size_t wstrlen(const wchar_t* _a)
-{
-	size_t _result = 0;
-	while (*(_a + _result) != L'\0') _result += 1;
-	return _result;
-}
-bool wstrcmp(const wchar_t* _a, const wchar_t* _b)
-{
-	if (wstrlen(_a) != wstrlen(_b)) return false;
-	auto _size = wstrlen(_a);
-	for (size_t i = 0; i < _size; i++)
-	{
-		if (*(_a + i) != *(_b + i)) return false;
-	}
-	return true;
-}
+
 SplitedScripts Script_Analyze::_SplitLinesByCRLF()
 {
 	wstring _temp(_ScriptContent.Content), buffer;
@@ -132,7 +118,7 @@ SortedScripts Script_Analyze::_SortScript()
 			{
 				SystemScript _temp;
 				_temp.Script = _ScriptBlocks.Blocks[i].Scripts[j];
-				_temp.Order = i;
+				_temp.Order = i + j;
 				_temp.Status = 0;
 				_temp.ScriptType = GetSystemScriptType(_ScriptBlocks.Blocks[i].Scripts[j]);
 				_temp._command = QLIEHelper::GetCommand(_temp.Script);
@@ -147,7 +133,7 @@ SortedScripts Script_Analyze::_SortScript()
 			{
 				CharacterScript _temp;
 				_temp.Script = _ScriptBlocks.Blocks[i].Scripts[j];
-				_temp.Order = i;
+				_temp.Order = i + j;
 				_temp.Status = 0;
 				_temp.Speaker = GetSpeaker(_ScriptBlocks.Blocks[i]);
 				if (wstrcmp((L"【" + _temp.Speaker + L"】").c_str(), _temp.Script.c_str()))_temp.Script = L"";
@@ -188,6 +174,8 @@ SystemScriptTypes Script_Analyze::_GetSystemScriptType(const SingleScript _k_Spl
 		return SystemScriptTypes::SetSentenceEffects;
 	if (_command.find(L"^select") != wstring::npos)
 		return SystemScriptTypes::SetSelect;
+	if (_command.find(L"^selectlabel") != wstring::npos)
+		return SystemScriptTypes::SetSelectLabel;
 	if (_command.find(L"^se") != wstring::npos)
 		return SystemScriptTypes::SetSound;
 	if (_command.find(L"^camera") != wstring::npos)

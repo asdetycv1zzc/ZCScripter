@@ -1,10 +1,18 @@
 #include<iostream>
 #include<string>
 #include<vector>
+#include<algorithm>
 #include<Script.h>
 #include<Translator.h>
+#include<wstring_extend.h>
 using namespace std;
 
+const bool _cmpByFileNum(const QLIE::_QLIEParameter_NormalForm& _a, const QLIE::_QLIEParameter_NormalForm& _b)
+{
+	auto _a_num = _a.Parameter.substr(_a.Parameter.find_first_of(L"file") + 1, 1)[0] - L'0';
+	auto _b_num = _b.Parameter.substr(_b.Parameter.find_first_of(L"file") + 1, 1)[0] - L'0';
+	return _a_num < _b_num;
+}
 const vector<wstring> Script_Translator::_s_From_QLIECharacter_To_KRKRCharacter(const CharacterScript& _k_source)
 {
 	wstring _krkr_speaker_script, _krkr_text;
@@ -72,6 +80,25 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 		{
 
 		}
+		break;
+	}
+	case SystemScriptTypes::SetCharacterModel:
+	{
+		QLIE::_QLIEParameters _tempPara;
+		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
+		{
+			if (wstrcmp(_k_source._parameters.Parameters[i].Parameter.substr(0, 4).c_str(), L"file"))
+				_tempPara.Parameters.push_back(_k_source._parameters.Parameters[i]);
+		}
+		sort(_tempPara.Parameters.begin(), _tempPara.Parameters.end(), _cmpByFileNum);
+		_tempPara.ParameterCount = _tempPara.Parameters.size();
+		wstring _allFilename = L"", _tempFilename;
+		for (size_t i = 0; i < _tempPara.ParameterCount; i++)
+		{
+			_tempFilename = _tempPara.Parameters[i].Parameter.substr(_tempPara.Parameters[i].Parameter.find_first_of(L':') + 1);
+			_allFilename.append(_tempFilename);
+		}
+		break;
 	}
 	}
 	vector<wstring> _result(1);
