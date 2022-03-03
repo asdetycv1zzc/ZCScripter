@@ -17,7 +17,7 @@ int main()
 	
 	vector<wstring> _test1;
 	_test1.reserve(100000);
-	for (unsigned long j = 24; j < _output.BlockAmount; j++)
+	for (unsigned long j = 0; j < _output.BlockAmount; j++)
 	{
 		//std::wcout.imbue(std::locale("chs"));
 		//wcout << _output.Blocks[i].Scripts[j];

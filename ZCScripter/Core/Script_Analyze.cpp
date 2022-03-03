@@ -110,6 +110,7 @@ SortedScripts Script_Analyze::_SortScript()
 	SystemScripts _system_part;
 	CharacterScripts _character_part;
 	SortedScripts _result;
+	size_t _currentScriptAmount = 0;
 	for (unsigned long long i = 0; i < _ScriptBlocks.BlockAmount; i++)
 	{
 		for (unsigned long long j = 0; j < _ScriptBlocks.Blocks[i].ScriptAmount; j++)
@@ -118,7 +119,7 @@ SortedScripts Script_Analyze::_SortScript()
 			{
 				SystemScript _temp;
 				_temp.Script = _ScriptBlocks.Blocks[i].Scripts[j];
-				_temp.Order = i + j;
+				_temp.Order = j;
 				_temp.Status = 0;
 				_temp.ScriptType = GetSystemScriptType(_ScriptBlocks.Blocks[i].Scripts[j]);
 				_temp._command = QLIEHelper::GetCommand(_temp.Script);
@@ -127,13 +128,13 @@ SortedScripts Script_Analyze::_SortScript()
 				pair<unsigned long long, short> _temp_map;
 				_temp_map.first = _system_part.Blocks.size() - 1;
 				_temp_map.second = 0;
-				_result._Typetable[i] = _temp_map;
+				_result._Typetable[_currentScriptAmount] = _temp_map;
 			}
 			else
 			{
 				CharacterScript _temp;
 				_temp.Script = _ScriptBlocks.Blocks[i].Scripts[j];
-				_temp.Order = i + j;
+				_temp.Order = j;
 				_temp.Status = 0;
 				_temp.Speaker = GetSpeaker(_ScriptBlocks.Blocks[i]);
 				if (wstrcmp((L"【" + _temp.Speaker + L"】").c_str(), _temp.Script.c_str()))_temp.Script = L"";
@@ -141,8 +142,9 @@ SortedScripts Script_Analyze::_SortScript()
 				pair<unsigned long long, short> _temp_map;
 				_temp_map.first = _character_part.Blocks.size() - 1;
 				_temp_map.second = 1;
-				_result._Typetable[i] = _temp_map;
+				_result._Typetable[_currentScriptAmount] = _temp_map;
 			}
+			_currentScriptAmount += 1;
 		}
 	}
 	_system_part.BlockAmount = _system_part.Blocks.size();
