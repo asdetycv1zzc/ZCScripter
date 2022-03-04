@@ -1,4 +1,4 @@
 #include<iostream>
-#include"Script.h"
+#include <global.h>
 using namespace std;
 

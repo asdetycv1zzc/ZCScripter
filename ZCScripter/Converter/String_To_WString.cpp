@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <clocale>
-#include"Converter.h"
+#include <global.h>
 #pragma warning(disable:4996)
 using namespace std;
 

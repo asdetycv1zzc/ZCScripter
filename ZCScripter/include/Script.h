@@ -51,6 +51,12 @@ enum CharacterScriptTypes
 	_UNDEFINED_CharacterScript,
 	PlayVoice			//example:％reng2820％
 };
+enum ScriptWriteStatus
+{
+	Success = true,
+	OpenFileFailed,
+	UndefinedError = false,
+};
 
 struct ScriptContent
 {
@@ -189,4 +195,13 @@ public:
 	Script_Converter();
 	Script_Converter(const char *);
 	~Script_Converter();
+};
+class Script_Writer
+{
+private:
+	std::wstring DestAddress;
+	const ScriptWriteStatus _s_WriteScripts(const std::wstring& _k_DestAddress, const TranslatedScripts& _k_source);
+
+public:
+	const ScriptWriteStatus s_WriteScripts(const std::wstring& k_DestAddress, const TranslatedScripts& k_source);
 };

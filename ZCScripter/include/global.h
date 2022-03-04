@@ -2,6 +2,12 @@
 #include<iostream>
 #include<string>
 #include<vector>
+#include<Script.h>
+#include<Converter.h>
+#include<Assemble.h>
+#include<types.h>
+#include<wstring_extend.h>
+#include<Translator.h>
 
 std::vector<std::wstring> g_AppearedCharacterModelNames;
 std::vector<std::wstring> g_BackgroundScripts;

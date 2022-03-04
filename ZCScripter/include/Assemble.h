@@ -1,9 +1,9 @@
 ﻿#pragma once
 #include <iostream>
 #include <string>
-#include <types.h>
 #include <vector>
-
+#include <global.h>
+#include <types.h>
 namespace QLIE
 {
 	enum _QLIEKeywords

@@ -3,8 +3,7 @@
 #include <string>
 #include <vector>
 #include <cstring>
-#include <wstring_extend.h>
-#include "Script.h"
+#include <global.h>
 using namespace std;
 
 

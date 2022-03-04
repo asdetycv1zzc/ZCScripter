@@ -2,8 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "Script.h"
-#include <Converter.h>
+#include <global.h>
 using namespace std;
 
 ScriptContent Script_Read::Read()

@@ -1,6 +1,6 @@
 #include<iostream>
 #include<string>
-#include"Converter.h"
+#include <global.h>
 using namespace std;
 
 StringStruct UCS_2_TO_UTF_8(StringStruct UCS_2)

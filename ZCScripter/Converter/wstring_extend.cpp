@@ -1,7 +1,7 @@
-#include<iostream>
-#include<string>
-#include<vector>
-#include<wstring_extend.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <global.h>
 using namespace std;
 
 size_t wstrlen(const wchar_t* _a)

@@ -2,9 +2,7 @@
 //
 
 #include <iostream>
-#include <Assemble.h>
-#include <Script.h>
-#include <Translator.h>
+#include <global.h>
 using namespace std;
 
 int main()
@@ -13,8 +11,8 @@ int main()
 	//ios_base::sync_with_stdio(false);
 	setlocale(LC_ALL, "chs");
 	//auto _output = temp.SplitScript();
-	auto _output = temp.SortScript();
-	
+	auto _output = Script_Translator::s_TranslateAll(temp.SortScript());
+	/*
 	vector<wstring> _test1;
 	//_test1.reserve(100000);
 	for (unsigned long j = 0; j < _output.BlockAmount; j++)
@@ -44,7 +42,7 @@ int main()
 		//wprintf(L"%s\n", _output._CharacterScripts.Blocks[j].Script.c_str());
 	}
 	wprintf(L"\n");
-
+	*/
 	system("pause");
 	return 0;
 }

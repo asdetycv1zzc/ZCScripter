@@ -1,10 +1,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include <Assemble.h>
-#include <Converter.h>
-#include <Script.h>
-#include <types.h>
+#include <global.h>
 using namespace std;
 
 /*

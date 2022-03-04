@@ -2,9 +2,6 @@
 #include<string>
 #include<vector>
 #include<algorithm>
-#include<Script.h>
-#include<Translator.h>
-#include<wstring_extend.h>
 #include<global.h>
 using namespace std;
 
@@ -14,7 +11,8 @@ const bool _cmpByFileNum(const QLIE::_QLIEParameter_NormalForm& _a, const QLIE::
 	auto _b_num = _b.Parameter.substr(_b.Parameter.find_first_of(L"file") + 1, 1)[0] - L'0';
 	return _a_num < _b_num;
 }
-const vector<wstring> Script_Translator::_s_From_QLIECharacter_To_KRKRCharacter(const CharacterScript& _k_source)
+
+const TranslatedScripts Script_Translator::_s_From_QLIECharacter_To_KRKRCharacter(const CharacterScript& _k_source)
 {
 	wstring _krkr_speaker_script, _krkr_text;
 	if (_k_source.Script[0] == L'ге' && _k_source.Script[_k_source.Script.size() - 1] == L'ге')
@@ -40,12 +38,12 @@ const vector<wstring> Script_Translator::_s_From_QLIECharacter_To_KRKRCharacter(
 	return _result;
 
 }
-const vector<wstring> Script_Translator::s_From_QLIECharacter_To_KRKRCharacter(const CharacterScript& k_source)
+const TranslatedScripts Script_Translator::s_From_QLIECharacter_To_KRKRCharacter(const CharacterScript& k_source)
 {
 	return _s_From_QLIECharacter_To_KRKRCharacter(k_source);
 }
 
-const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const SystemScript& _k_source)
+const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const SystemScript& _k_source)
 {
 	wstring _krkr_script;
 	switch (_k_source.ScriptType)
@@ -220,12 +218,46 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 			g_AppearedCharacterModelNames.push_back(_allFilename);
 		break;
 	}
+	case SystemScriptTypes::SetPostScript: [[fallthrough]];
+	case SystemScriptTypes::SetEntryName: [[fallthrough]];
+	case SystemScriptTypes::SetIncludeFile:break;
 	}
 	vector<wstring> _result;
 	_result.push_back(_krkr_script);
 	return _result;
 }
-const vector<wstring> Script_Translator::s_From_QLIESystem_To_KRKRSystem(const SystemScript& k_source)
+const TranslatedScripts Script_Translator::s_From_QLIESystem_To_KRKRSystem(const SystemScript& k_source)
 {
 	return _s_From_QLIESystem_To_KRKRSystem(k_source);
+}
+
+const TranslatedScripts Script_Translator::_s_TranslateAll(const SortedScripts& _k_source)
+{
+	TranslatedScripts _result;
+	for (size_t i = 0; i < _k_source.BlockAmount; i++)
+	{
+		auto _type = _k_source._Typetable.at(i).second;
+		switch (_type)
+		{
+		case 0:
+		{
+			auto _test_p = _k_source._SystemScripts.Blocks[_k_source._Typetable.at(i).first];
+			auto _temp = Script_Translator::s_From_QLIESystem_To_KRKRSystem(_test_p);
+			_result.insert(_result.end(), _temp.begin(), _temp.end());
+			break;
+		}
+		case 1:
+		{
+			auto _test_p = _k_source._CharacterScripts.Blocks[_k_source._Typetable.at(i).first];
+			auto _temp = Script_Translator::s_From_QLIECharacter_To_KRKRCharacter(_test_p);
+			_result.insert(_result.end(), _temp.begin(), _temp.end());
+			break;
+		}
+		}
+	}
+	return _result;
+}
+const TranslatedScripts Script_Translator::s_TranslateAll(const SortedScripts& k_source)
+{
+	return _s_TranslateAll(k_source);
 }

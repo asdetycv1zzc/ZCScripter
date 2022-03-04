@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <Script.h>
+#include <global.h>
 using namespace std;
 
 QLIE::_QLIEScripts Script_Converter::_SplitedScripts_TO_QLIEScripts(const SplitedScripts _k_source)

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <Assemble.h>
+#include <global.h>
 using namespace std;
 
 const QLIE::_QLIEParameterTypes QLIEHelper::_GetParameterType(const _QLIEScript& _k_Script)
