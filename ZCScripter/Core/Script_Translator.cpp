@@ -53,26 +53,56 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 	case SystemScriptTypes::SetBackground:
 	{
 		//Get filename
-		wstring _filename, _bgSwitchMode;
+		wstring _filename, _bgSwitchMode,_layer;
+		if (_k_source._command.find_first_of(L"^bg") != wstring::npos)
+		{
+			auto beginPos = _k_source._command.find_first_of(L"^bg") + 3;
+			auto endPos = _k_source._command.find_first_of(L':');
+			auto _size = endPos - beginPos;
+			_layer = _k_source._command.substr(beginPos, _size);
+		}
 		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
 		{
 			if (_k_source._parameters.Parameters[i].Parameter.substr(0,5) == L"file:")
 			{
-				_filename = wstring(_k_source._parameters.Parameters[i].Parameter.substr(_k_source._parameters.Parameters[i].Parameter.find_last_of(L"/") + 1));
-				if (_filename.find(L":none") != wstring::npos)
+				if (_k_source._parameters.Parameters[i].Parameter.find(L"/") != wstring::npos)
+					_filename = wstring(_k_source._parameters.Parameters[i].Parameter.substr(_k_source._parameters.Parameters[i].Parameter.find_last_of(L"/") + 1));
+				else
+					_filename = wstring(_k_source._parameters.Parameters[i].Parameter.substr(_k_source._parameters.Parameters[i].Parameter.find_last_of(L":") + 1));
+				if (_filename.find(L"none") != wstring::npos)
 					_filename = wstring(DEFAULT_BACKGROUND);
 			}
+			
+		}
+		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
+		{
 			if (_k_source._parameters.Parameters[i].Parameter[0] == L'$')
 			{
 				_bgSwitchMode = wstring(_k_source._parameters.Parameters[i].Parameter.substr(1));
-				if (_bgSwitchMode != L"reset_bg") 
+				if (_bgSwitchMode != L"reset_bg")
 					_bgSwitchMode = DEFAULT_BACKGROUND_SWITCH_METHOD;
 				else
 					_bgSwitchMode = L"";
 			}
-			
+			if (_k_source._parameters.Parameters[i].Parameter.find(L"show:false") != wstring::npos)
+			{
+				_filename = wstring(DEFAULT_BACKGROUND);
+				g_BackgroundBuffer[_layer].assign(g_BackgroundFiles[g_BackgroundFiles.size() - 1].second);
+			}
+			if (_k_source._parameters.Parameters[i].Parameter.find(L"show:true") != wstring::npos)
+			{
+				if(_filename.empty())
+					_filename = g_BackgroundBuffer[_layer];
+			}
+			if (_k_source._parameters.Parameters[i].Parameter.substr(0, 3) == L"rep")
+			{
+				_filename = wstring(_k_source._parameters.Parameters[i].Parameter.substr(_k_source._parameters.Parameters[i].Parameter.find_last_of(L"/") + 1));
+			}
 		}
 		_krkr_script = L"@bg method=\"" + _bgSwitchMode + L"\" storage=\"" + _filename + L"\"";
+		g_BackgroundScripts.push_back(_k_source.Script);
+		if(!_filename.empty())
+			g_BackgroundFiles.push_back(make_pair(_layer,_filename));
 		break;
 	}
 	case SystemScriptTypes::SetSound:
@@ -86,7 +116,7 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 	case SystemScriptTypes::SetCharacterModel:
 	{
 		wstring _allFilename = L"", _tempFilename;
-		wstring _alpha;
+		wstring _alpha,_layer;
 		bool _RequireRebuild = false;
 		bool _NoAlpha = true;
 		QLIE::_QLIEParameters _tempPara;
@@ -155,12 +185,22 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 			_tempFilename = _tempPara.Parameters[i].Parameter.substr(_tempPara.Parameters[i].Parameter.find_first_of(L':') + 1);
 			_allFilename.append(_tempFilename);
 		}
+		//获取角色编号并转为相应图层
+		if (_k_source._command.find_first_of(L"chara") != wstring::npos)
+		{
+			auto beginPos = _k_source._command.find_first_of(L"chara") + 5;
+			auto endPos = _k_source._command.find_first_of(L':');
+			auto _size = endPos - beginPos;
+			_layer = _k_source._command.substr(beginPos, _size);
+		}
+		else
+			_layer = wstring(DEFAULT_CHARACTER_LAYER);
 		if (_allFilename.find(L"none") == wstring::npos)
 		{
 			_krkr_script.append(L"@fg ");
 			if (!_NoAlpha)
 				_krkr_script.append(L"opcacity=\"" + _alpha + L"\" ");
-			_krkr_script.append(L"layer=\"" + wstring(DEFAULT_CHARACTER_LAYER) + L"\" ");
+			_krkr_script.append(L"layer=\"" + _layer + L"\" ");
 			_krkr_script.append(L"method=\"" + wstring(DEFAULT_CHARACTER_SWITCH_METHOD) + L"\" ");
 			_krkr_script.append(L"storage=\"" + _allFilename + L"\"");
 			
@@ -168,7 +208,7 @@ const vector<wstring> Script_Translator::_s_From_QLIESystem_To_KRKRSystem(const 
 		else
 		{
 			_krkr_script.append(L"@clfg ");
-			_krkr_script.append(L"layer=\"" + wstring(DEFAULT_CHARACTER_LAYER) + L"\" ");
+			_krkr_script.append(L"layer=\"" + _layer + L"\" ");
 			_krkr_script.append(L"method=\"" + wstring(DEFAULT_CHARACTER_SWITCH_METHOD) + L"\" ");
 			_krkr_script.append(L"pos=\"" + wstring(DEFAULT_CHARACTER_POSITION) + L"\" ");
 		}

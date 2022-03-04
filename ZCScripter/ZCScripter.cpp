@@ -38,7 +38,7 @@ int main()
 		
 		for (unsigned long k = 0; k < _test1.size(); k++)
 		{
-			wprintf(L"%s\n", _test1[k].c_str());
+			//wprintf(L"%s\n", _test1[k].c_str());
 		}
 		_test1.clear();
 		//wprintf(L"%s\n", _output._CharacterScripts.Blocks[j].Script.c_str());
