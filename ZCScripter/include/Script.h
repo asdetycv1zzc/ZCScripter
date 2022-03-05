@@ -203,8 +203,8 @@ class Script_Writer
 {
 private:
 	std::wstring DestAddress;
-	const ScriptWriteStatus _s_WriteScripts(const std::wstring& _k_DestAddress, const TranslatedScripts& _k_source);
+	const static ScriptWriteStatus _s_WriteScripts(const std::wstring& _k_DestAddress, const TranslatedScripts& _k_source);
 
 public:
-	const ScriptWriteStatus s_WriteScripts(const std::wstring& k_DestAddress, const TranslatedScripts& k_source);
+	const static ScriptWriteStatus s_WriteScripts(const std::wstring& k_DestAddress, const TranslatedScripts& k_source);
 };

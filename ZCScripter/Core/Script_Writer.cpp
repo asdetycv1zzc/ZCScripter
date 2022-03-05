@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 #include <string>
 #include <fstream>
@@ -9,24 +9,33 @@ using namespace std;
 
 const ScriptWriteStatus Script_Writer::_s_WriteScripts(const wstring& _k_DestAddress, const TranslatedScripts& _k_source)
 {
-	FILE* _ScriptFile = NULL;
+	//setlocale(LC_ALL, "chs");
+	wfstream _ScriptFile;
 	try
 	{
-		_wfopen_s(&_ScriptFile, _k_DestAddress.c_str(), L"wb");
-		fseek(_ScriptFile, 0, 0);
-		if (_ScriptFile == NULL) return ScriptWriteStatus::OpenFileFailed;
+		_ScriptFile.open(_k_DestAddress, wios::beg | wios::out | wios::binary);
+		_ScriptFile.seekg(0, wios::beg);
+		//_ScriptFile.imbue(locale("", locale::all ^ locale::numeric));
+		_ScriptFile.imbue(locale("chs"));
 		for (size_t i = 0; i < _k_source.size(); i++)
 		{
-			fwrite(_k_source[i].c_str(), sizeof(wchar_t), wstrlen(_k_source[i].c_str()), _ScriptFile);
+			auto _temp = _k_source[i];
+			if (_temp.find(L"・") != wstring::npos)
+			{
+				auto _pos = _temp.find(L"・");
+				_temp[_pos] = L'、';
+			}
+			_ScriptFile.write(_temp.c_str(), _temp.size());
+			_ScriptFile.write(L"\n", 1);
+			_ScriptFile.flush();
 		}
-		fclose(_ScriptFile);
+		_ScriptFile.close();
 		return ScriptWriteStatus::Success;
 	}
 	catch (const exception& e)
 	{
 		wcerr << e.what() << endl;
-		if (_ScriptFile != NULL)
-			fclose(_ScriptFile);
+		if (_ScriptFile.is_open()) _ScriptFile.close();
 		return ScriptWriteStatus::UndefinedError;
 	}
 }

@@ -44,6 +44,7 @@ int main()
 	}
 	wprintf(L"\n");
 	*/
+	auto _result = Script_Writer::s_WriteScripts(L"N:\\方力U盘备份\\机密\\Shojo\\scenario\\本編\\k18_01.ks", _output);
 	system("pause");
 	return 0;
 }

@@ -143,7 +143,8 @@ SortedScripts Script_Analyze::_SortScript()
 				_temp.Order = j;
 				_temp.Status = 0;
 				_temp.Speaker = GetSpeaker(_ScriptBlocks.Blocks[i]);
-				if (wstrcmp((L"【" + _temp.Speaker + L"】").c_str(), _temp.Script.c_str()))_temp.Script = L"";
+				if (wstrcmp((L"【" + _temp.Speaker + L"】").c_str(), _temp.Script.c_str()))
+					_temp.Script = L"";
 				_temp._Filename = _RelativeFileName;
 				_character_part.Blocks.push_back(_temp);
 				pair<unsigned long long, short> _temp_map;

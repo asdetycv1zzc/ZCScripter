@@ -27,9 +27,9 @@ const TranslatedScripts Script_Translator::_s_From_QLIECharacter_To_KRKRCharacte
 	}
 	else
 	{
+		_krkr_speaker_script = L"@npc id=\"" + _k_source.Speaker + L"\"";
 		if (_k_source.Speaker == L"") 
 			_krkr_speaker_script = L"";
-		_krkr_speaker_script = L"@npc id=\"" + _k_source.Speaker + L"\"";
 		if (_k_source.Script != L"")
 			_krkr_text = wstring(_k_source.Script + L"[w]");
 		else
@@ -54,7 +54,7 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 	case SystemScriptTypes::SetBackground:
 	{
 		//Get filename
-		wstring _filename, _bgSwitchMode,_layer;
+		wstring _filename, _bgSwitchMode = wstring(DEFAULT_BACKGROUND_SWITCH_METHOD),_layer;
 		if (_k_source._command.find_first_of(L"^bg") != wstring::npos)
 		{
 			auto beginPos = _k_source._command.find_first_of(L"^bg") + 3;
@@ -100,6 +100,8 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 				_filename = wstring(_k_source._parameters.Parameters[i].Parameter.substr(_k_source._parameters.Parameters[i].Parameter.find_last_of(L"/") + 1));
 			}
 		}
+		if (_filename.empty())
+			_filename = wstring(DEFAULT_BACKGROUND);
 		_krkr_script = L"@bg method=\"" + _bgSwitchMode + L"\" storage=\"" + _filename + L"\"";
 		g_BackgroundScripts.push_back(_k_source.Script);
 		if(!_filename.empty())
@@ -213,7 +215,7 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 				_krkr_script.append(L"opcacity=\"" + _alpha + L"\" ");
 			_krkr_script.append(L"layer=\"" + _layer + L"\" ");
 			_krkr_script.append(L"method=\"" + wstring(DEFAULT_CHARACTER_SWITCH_METHOD) + L"\" ");
-			_krkr_script.append(L"storage=\"" + _allFilename + L"\"");
+			_krkr_script.append(L"storage=\"" + _allFilename + L"\" ");
 			_krkr_script.append(L"pos=\"" + _pos + L"\" ");
 			
 		}
@@ -242,16 +244,30 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 		_ChapterName = _k_source._Filename.substr(0, _k_source._Filename.find_last_of(L".s") - 1);
 
 		_krkr_script.append(L"*" + _EntryName);
-		_result.push_back(_krkr_script);
-
-		_krkr_script.clear();
-
-		_krkr_script.append(L"|" + _ChapterName);
-		_result.push_back(_krkr_script);
-		return _result;
+		_krkr_script.append(L" |" + _ChapterName);
+		break;
 	}
 	case SystemScriptTypes::SetIncludeFile:break;
+	case SystemScriptTypes::SetSelect:
+	{
+		if (!g_LastSelectTextBuffer.second); //throw exception();
+		else g_LastSelectTextBuffer.first.clear();
+		g_LastSelectTextBuffer.first.resize(_k_source._parameters.ParameterCount);
+		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
+		{
+			g_LastSelectTextBuffer.first[i] = _k_source._parameters.Parameters[i].Parameter;
+		}
+		g_LastSelectTextBuffer.second = false;
+		break;
 	}
+	case SystemScriptTypes::SetSelectLabel:
+	{
+		if (g_LastSelectTextBuffer.second);//throw exception();
+		_krkr_script.append(L"@selbutton target=\"" + );
+		break;
+	}
+	}
+	
 	vector<wstring> _result;
 	_result.push_back(_krkr_script);
 	return _result;
