@@ -112,11 +112,15 @@ SortedScripts Script_Analyze::_SortScript()
 	CharacterScripts _character_part;
 	SortedScripts _result;
 	size_t _currentScriptAmount = 0;
+
+	_result.CompleteFileName = StringToWString(string(_ScriptAddress));
+	auto _RelativeFileName = _result.CompleteFileName.substr(_result.CompleteFileName.find_last_of(L"\\") + 1);
+
 	for (unsigned long long i = 0; i < _ScriptBlocks.BlockAmount; i++)
 	{
 		for (unsigned long long j = 0; j < _ScriptBlocks.Blocks[i].ScriptAmount; j++)
 		{
-			if (_ScriptBlocks.Blocks[i].Scripts[j][0] == L'^' || (_ScriptBlocks.Blocks[i].Scripts[j][0] == L'@' && _ScriptBlocks.Blocks[i].Scripts[j][1] == L'@'))
+			if (_ScriptBlocks.Blocks[i].Scripts[j][0] == L'^' || _ScriptBlocks.Blocks[i].Scripts[j].find(L"@@") != wstring::npos)
 			{
 				SystemScript _temp;
 				_temp.Script = _ScriptBlocks.Blocks[i].Scripts[j];
@@ -125,6 +129,7 @@ SortedScripts Script_Analyze::_SortScript()
 				_temp.ScriptType = GetSystemScriptType(_ScriptBlocks.Blocks[i].Scripts[j]);
 				_temp._command = QLIEHelper::GetCommand(_temp.Script);
 				_temp._parameters = QLIEHelper::GetParameters(_temp.Script);
+				_temp._Filename = _RelativeFileName;
 				_system_part.Blocks.push_back(_temp);
 				pair<unsigned long long, short> _temp_map;
 				_temp_map.first = _system_part.Blocks.size() - 1;
@@ -139,6 +144,7 @@ SortedScripts Script_Analyze::_SortScript()
 				_temp.Status = 0;
 				_temp.Speaker = GetSpeaker(_ScriptBlocks.Blocks[i]);
 				if (wstrcmp((L"【" + _temp.Speaker + L"】").c_str(), _temp.Script.c_str()))_temp.Script = L"";
+				_temp._Filename = _RelativeFileName;
 				_character_part.Blocks.push_back(_temp);
 				pair<unsigned long long, short> _temp_map;
 				_temp_map.first = _character_part.Blocks.size() - 1;
@@ -152,7 +158,7 @@ SortedScripts Script_Analyze::_SortScript()
 	_character_part.BlockAmount = _character_part.Blocks.size();
 	_system_part.Status = 0;
 	_character_part.Status = 0;
-	_result.SelfFileName = StringToWString(string(_ScriptAddress));
+	
 	_result._CharacterScripts = _character_part;
 	_result._SystemScripts = _system_part;
 	_result.BlockAmount = _result._CharacterScripts.BlockAmount + _result._SystemScripts.BlockAmount;

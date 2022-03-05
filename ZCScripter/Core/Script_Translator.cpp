@@ -234,10 +234,21 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 	case SystemScriptTypes::SetPostScript: break;
 	case SystemScriptTypes::SetEntryName:
 	{
+		vector<wstring> _result;
+
 		auto _EntryName = _k_source.Script.substr(_k_source.Script.find_first_of(L"@@") + 2);
 		wstring _ChapterName;
 		if (wstrcmp(L"MAIN", _EntryName.c_str())) _EntryName = L"TOP";
-		break;
+		_ChapterName = _k_source._Filename.substr(0, _k_source._Filename.find_last_of(L".s") - 1);
+
+		_krkr_script.append(L"*" + _EntryName);
+		_result.push_back(_krkr_script);
+
+		_krkr_script.clear();
+
+		_krkr_script.append(L"|" + _ChapterName);
+		_result.push_back(_krkr_script);
+		return _result;
 	}
 	case SystemScriptTypes::SetIncludeFile:break;
 	}

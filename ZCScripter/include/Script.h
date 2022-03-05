@@ -82,6 +82,7 @@ struct SystemScript
 {
 	unsigned long Order = -1;
 	StatusCode Status = -1;
+	std::wstring _Filename;
 	SystemScriptTypes ScriptType = SystemScriptTypes::_UNDEFINED_SystemScript;
 	SingleScript Script;
 	std::wstring _command;
@@ -91,6 +92,7 @@ struct CharacterScript
 {
 	unsigned long Order = -1;
 	StatusCode Status = -1;
+	std::wstring _Filename;
 	std::wstring Speaker;
 	CharacterScriptTypes ScriptType = CharacterScriptTypes::_UNDEFINED_CharacterScript;
 	SingleScript Script;
@@ -120,7 +122,7 @@ struct SortedScripts
 {
 	StatusCode Status = -1;
 	unsigned long BlockAmount = -1;
-	std::wstring SelfFileName;
+	std::wstring CompleteFileName;
 	std::map<unsigned long long, std::pair<unsigned long long,short> > _Typetable;
 	SystemScripts _SystemScripts;
 	CharacterScripts _CharacterScripts;
