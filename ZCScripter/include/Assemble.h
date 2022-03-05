@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <global.h>
 #include <types.h>
 namespace QLIE
 {

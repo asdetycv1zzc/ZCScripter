@@ -1,9 +1,9 @@
 #pragma once
 #include<iostream>
 #include<string>
-#include <Windows.h>
-#include <tchar.h>
-#include <clocale>
+#include<Windows.h>
+#include<tchar.h>
+#include<clocale>
 struct StringStruct
 {
 	std::string Content;

@@ -120,6 +120,7 @@ struct SortedScripts
 {
 	StatusCode Status = -1;
 	unsigned long BlockAmount = -1;
+	std::wstring SelfFileName;
 	std::map<unsigned long long, std::pair<unsigned long long,short> > _Typetable;
 	SystemScripts _SystemScripts;
 	CharacterScripts _CharacterScripts;

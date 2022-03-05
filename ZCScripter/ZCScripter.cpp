@@ -2,7 +2,8 @@
 //
 
 #include <iostream>
-#include <global.h>
+#include <Script.h>
+#include <Translator.h>
 using namespace std;
 
 int main()

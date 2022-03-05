@@ -11,7 +11,7 @@ constexpr auto DEFAULT_CHARACTER_LAYER = L"0";
 constexpr auto DEFAULT_CHARACTER_SEPERATE_CHAR = L"_";
 constexpr auto DEFAULT_CHARACTER_POSITION = L"center";
 
-typedef std::vector<std::wstring> TranslatedScripts;
+
 
 class Script_Translator
 {

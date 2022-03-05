@@ -2,7 +2,10 @@
 #include<string>
 #include<vector>
 #include<algorithm>
+#include<Script.h>
+#include<Translator.h>
 #include<global.h>
+#include<wstring_extend.h>
 using namespace std;
 
 const bool _cmpByFileNum(const QLIE::_QLIEParameter_NormalForm& _a, const QLIE::_QLIEParameter_NormalForm& _b)
@@ -114,7 +117,7 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 	case SystemScriptTypes::SetCharacterModel:
 	{
 		wstring _allFilename = L"", _tempFilename;
-		wstring _alpha,_layer;
+		wstring _alpha,_layer,_pos = wstring(DEFAULT_CHARACTER_POSITION);
 		bool _RequireRebuild = false;
 		bool _NoAlpha = true;
 		QLIE::_QLIEParameters _tempPara;
@@ -193,6 +196,16 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 		}
 		else
 			_layer = wstring(DEFAULT_CHARACTER_LAYER);
+		//获得角色位置
+		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
+		{
+			if (_k_source._parameters.Parameters[i].Parameter.substr(0, 2) == L"x:")
+			{
+				auto _temp_pos = _k_source._parameters.Parameters[i].Parameter.substr(3);
+				if (wstrcmp(L"$c_left", _temp_pos.c_str())) _pos = L"left";
+				else if (wstrcmp(L"$c_right", _temp_pos.c_str())) _pos = L"right";
+			}
+		}
 		if (_allFilename.find(L"none") == wstring::npos)
 		{
 			_krkr_script.append(L"@fg ");
@@ -201,6 +214,7 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 			_krkr_script.append(L"layer=\"" + _layer + L"\" ");
 			_krkr_script.append(L"method=\"" + wstring(DEFAULT_CHARACTER_SWITCH_METHOD) + L"\" ");
 			_krkr_script.append(L"storage=\"" + _allFilename + L"\"");
+			_krkr_script.append(L"pos=\"" + _pos + L"\" ");
 			
 		}
 		else
@@ -208,7 +222,6 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 			_krkr_script.append(L"@clfg ");
 			_krkr_script.append(L"layer=\"" + _layer + L"\" ");
 			_krkr_script.append(L"method=\"" + wstring(DEFAULT_CHARACTER_SWITCH_METHOD) + L"\" ");
-			_krkr_script.append(L"pos=\"" + wstring(DEFAULT_CHARACTER_POSITION) + L"\" ");
 		}
 		if (_allFilename.empty())
 		{
@@ -218,8 +231,14 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 			g_AppearedCharacterModelNames.push_back(_allFilename);
 		break;
 	}
-	case SystemScriptTypes::SetPostScript: [[fallthrough]];
-	case SystemScriptTypes::SetEntryName: [[fallthrough]];
+	case SystemScriptTypes::SetPostScript: break;
+	case SystemScriptTypes::SetEntryName:
+	{
+		auto _EntryName = _k_source.Script.substr(_k_source.Script.find_first_of(L"@@") + 2);
+		wstring _ChapterName;
+		if (wstrcmp(L"MAIN", _EntryName.c_str())) _EntryName = L"TOP";
+		break;
+	}
 	case SystemScriptTypes::SetIncludeFile:break;
 	}
 	vector<wstring> _result;

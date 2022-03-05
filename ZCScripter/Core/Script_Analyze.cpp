@@ -3,7 +3,9 @@
 #include <string>
 #include <vector>
 #include <cstring>
-#include <global.h>
+#include <Script.h>
+#include <Converter.h>
+#include <wstring_extend.h>
 using namespace std;
 
 
@@ -150,6 +152,7 @@ SortedScripts Script_Analyze::_SortScript()
 	_character_part.BlockAmount = _character_part.Blocks.size();
 	_system_part.Status = 0;
 	_character_part.Status = 0;
+	_result.SelfFileName = StringToWString(string(_ScriptAddress));
 	_result._CharacterScripts = _character_part;
 	_result._SystemScripts = _system_part;
 	_result.BlockAmount = _result._CharacterScripts.BlockAmount + _result._SystemScripts.BlockAmount;

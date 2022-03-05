@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <global.h>
+#include <Script.h>
 using namespace std;
 
 ScriptContent Script_Read::Read()
