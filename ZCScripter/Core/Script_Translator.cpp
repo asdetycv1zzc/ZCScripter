@@ -106,6 +106,9 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 		g_BackgroundScripts.push_back(_k_source.Script);
 		if(!_filename.empty())
 			g_BackgroundFiles.push_back(make_pair(_layer,_filename));
+		vector<wstring> _result;
+		_result.push_back(_krkr_script);
+		return _result;
 		break;
 	}
 	case SystemScriptTypes::SetSound:
@@ -238,13 +241,12 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 	{
 		vector<wstring> _result;
 
-		auto _EntryName = _k_source.Script.substr(_k_source.Script.find_first_of(L"@@") + 2);
+		auto _EntryName = _s_From_QLIELabel_To_KRKRLabel(_k_source.Script);
 		wstring _ChapterName;
-		if (wstrcmp(L"MAIN", _EntryName.c_str())) _EntryName = L"TOP";
 		_ChapterName = _k_source._Filename.substr(0, _k_source._Filename.find_last_of(L".s") - 1);
 
 		_krkr_script.append(L"*" + _EntryName);
-		_krkr_script.append(L" |" + _ChapterName);
+		_krkr_script.append(L"|" + _ChapterName); //Fixed Issue
 		break;
 	}
 	case SystemScriptTypes::SetIncludeFile:break;
@@ -262,8 +264,15 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 	}
 	case SystemScriptTypes::SetSelectLabel:
 	{
+		vector<wstring> _temp_Labels(_k_source._parameters.ParameterCount);
 		if (g_LastSelectTextBuffer.second);//throw exception();
-		_krkr_script.append(L"@selbutton target=\"" + );
+		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
+		{
+			auto _protect_ = _k_source._parameters.Parameters[i].Parameter;
+			_temp_Labels[i] = _protect_;
+			clearwstr(_temp_Labels[i],L'\"');
+		}
+		//_krkr_script.append(L"@selbutton target=\"" + );
 		break;
 	}
 	}
@@ -277,6 +286,14 @@ const TranslatedScripts Script_Translator::s_From_QLIESystem_To_KRKRSystem(const
 	return _s_From_QLIESystem_To_KRKRSystem(k_source);
 }
 
+const wstring Script_Translator::_s_From_QLIELabel_To_KRKRLabel(const wstring& _k_source)
+{
+	wstring _result = L"";
+	if (_k_source.find(L"@@") == wstring::npos) return _result;
+	_result = _k_source.substr(_k_source.find_first_of(L"@@") + 2);
+	if (wstrcmp(_result.c_str(), L"MAIN")) _result = L"TOP";
+	return _result;
+}
 const TranslatedScripts Script_Translator::_s_TranslateAll(const SortedScripts& _k_source)
 {
 	TranslatedScripts _result;
@@ -300,6 +317,13 @@ const TranslatedScripts Script_Translator::_s_TranslateAll(const SortedScripts& 
 			break;
 		}
 		}
+	}
+	for (auto i = _result.begin(); i != _result.end();)
+	{
+		if (*i == L"")
+			i = _result.erase(i);
+		else
+			i++;
 	}
 	return _result;
 }

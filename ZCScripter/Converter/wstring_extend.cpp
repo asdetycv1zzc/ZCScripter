@@ -33,3 +33,14 @@ vector<wstring> splitwstr(const wstring& _source, const wstring& _seperate)
 	}
 	return _result;
 }
+bool clearwstr(std::wstring& _source, const wchar_t& _remove)
+{
+	for (auto i = _source.begin(); i != _source.end();)
+	{
+		if (*i == _remove)
+			i = _source.erase(i);
+		else
+			i++;
+	}
+	return true;
+}
