@@ -28,8 +28,6 @@ const TranslatedScripts Script_Translator::_s_From_QLIECharacter_To_KRKRCharacte
 	else
 	{
 		_krkr_speaker_script = L"@npc id=\"" + _k_source.Speaker + L"\"";
-		if (_k_source.Speaker == L"") 
-			_krkr_speaker_script = L"";
 		if (_k_source.Script != L"")
 			_krkr_text = wstring(_k_source.Script + L"[w]");
 		else
@@ -111,13 +109,42 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 		return _result;
 		break;
 	}
-	case SystemScriptTypes::SetSound:
+	case SystemScriptTypes::SetSound: [[fallthrough]];
+	case SystemScriptTypes::SetMusic:
 	{
+		wstring _filename,_volume,_loop;
+		vector<pair<wstring, wstring> > _paras(_k_source._parameters.ParameterCount);
 		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
 		{
-
+			auto _temp_para = _s_Extract_QLIESubParameter(_k_source._parameters.Parameters[i].Parameter, DEFAULT_QLIE_SUBPARAMETER_SPLIT);
+			_paras[i] = _temp_para;
 		}
-		break;
+		for (size_t i = 0; i < _paras.size(); i++)
+		{
+			if (_paras[i].first == L"file")
+				_filename = _paras[i].second;
+			if (_paras[i].first == L"vol")
+				_volume = _paras[i].second;
+			if (_paras[i].first == L"loop")
+				_loop = _paras[i].second;
+		}
+		if (_filename.empty())
+			_filename = g_PlayedSounds[g_PlayedSounds.size() - 1];
+		else
+			g_PlayedSounds.push_back(_filename);
+		_krkr_script.append(L"@bgm storage=\"" + _filename + L"\" ");
+		if (!_loop.empty())
+		{
+			if (_loop == L"true")
+				_krkr_script.append(L"loop=1 ");
+			else
+				_krkr_script.append(L"loop=0 ");
+		}
+		if (!_volume.empty())
+			_krkr_script.append(L"vol=" + _volume);
+		vector<wstring> _result;
+		_result.push_back(_krkr_script);
+		return _result;
 	}
 	case SystemScriptTypes::SetCharacterModel:
 	{
@@ -265,14 +292,24 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 	case SystemScriptTypes::SetSelectLabel:
 	{
 		vector<wstring> _temp_Labels(_k_source._parameters.ParameterCount);
+		vector<wstring> _result;
 		if (g_LastSelectTextBuffer.second);//throw exception();
 		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
 		{
 			auto _protect_ = _k_source._parameters.Parameters[i].Parameter;
 			_temp_Labels[i] = _protect_;
 			clearwstr(_temp_Labels[i],L'\"');
+			_temp_Labels[i] = _s_From_QLIELabel_To_KRKRLabel(_temp_Labels[i]);
 		}
-		//_krkr_script.append(L"@selbutton target=\"" + );
+		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
+		{
+			_krkr_script.append(L"@selbutton target=\"*" + _temp_Labels[i] + L"\" ");
+			_krkr_script.append(L"text=\"" + g_LastSelectTextBuffer.first[i] + L"\"");
+			_result.push_back(_krkr_script);
+			_krkr_script.clear();
+		}
+		g_LastSelectTextBuffer.second = false;
+		return _result;
 		break;
 	}
 	}
@@ -294,6 +331,38 @@ const wstring Script_Translator::_s_From_QLIELabel_To_KRKRLabel(const wstring& _
 	if (wstrcmp(_result.c_str(), L"MAIN")) _result = L"TOP";
 	return _result;
 }
+const wstring Script_Translator::s_From_QLIELabel_To_KRKRLabel(const wstring& k_source)
+{
+	return _s_From_QLIELabel_To_KRKRLabel(k_source);
+}
+
+const pair<wstring,wstring> Script_Translator::_s_Extract_QLIESubParameter(const wstring& _k_source, const std::wstring& _k_split)
+{
+	pair<wstring, wstring> _result;
+	auto _first = _k_source.substr(0, _k_source.find_first_of(_k_split));
+	auto _second = _k_source.substr(_k_source.find_first_of(_k_split) + 1);
+	_result.first = _first;
+	_result.second = _second;
+	return _result;
+}
+const wstring Script_Translator::_s_Extract_QLIESubParameter(const wstring& _k_source, const std::wstring& _k_name, const std::wstring& _k_split)
+{
+	wstring _result = _k_source;
+	if (_k_source.find(_k_name) == wstring::npos)return _result;
+	auto _beginPos = _k_source.find_first_of(_k_name) + _k_name.size() + _k_split.size();
+	_result = _k_source.substr(_beginPos);
+	return _result;
+}
+
+const pair<wstring, wstring> Script_Translator::s_Extract_QLIESubParameter(const wstring& k_source, const std::wstring& k_split)
+{
+	return _s_Extract_QLIESubParameter(k_source, k_split);
+}
+const wstring Script_Translator::s_Extract_QLIESubParameter(const wstring& k_source, const std::wstring& k_name, const std::wstring& k_split)
+{
+	return _s_Extract_QLIESubParameter(k_source, k_name, k_split);
+}
+
 const TranslatedScripts Script_Translator::_s_TranslateAll(const SortedScripts& _k_source)
 {
 	TranslatedScripts _result;
@@ -325,6 +394,15 @@ const TranslatedScripts Script_Translator::_s_TranslateAll(const SortedScripts& 
 		else
 			i++;
 	}
+	
+	for (auto i = _result.begin() + 1; i != _result.end();)
+	{
+		if (*i == *(i - 1))
+			i = _result.erase(i);
+		else
+			i++;
+	}
+	
 	return _result;
 }
 const TranslatedScripts Script_Translator::s_TranslateAll(const SortedScripts& k_source)

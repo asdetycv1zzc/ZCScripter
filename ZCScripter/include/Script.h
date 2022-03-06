@@ -82,8 +82,8 @@ struct SystemScript
 {
 	unsigned long Order = -1;
 	StatusCode Status = -1;
-	std::wstring _Filename;
 	SystemScriptTypes ScriptType = SystemScriptTypes::_UNDEFINED_SystemScript;
+	std::wstring _Filename;
 	SingleScript Script;
 	std::wstring _command;
 	QLIE::_QLIEParameters _parameters;
@@ -92,9 +92,9 @@ struct CharacterScript
 {
 	unsigned long Order = -1;
 	StatusCode Status = -1;
-	std::wstring _Filename;
 	std::wstring Speaker;
 	CharacterScriptTypes ScriptType = CharacterScriptTypes::_UNDEFINED_CharacterScript;
+	std::wstring _Filename;
 	SingleScript Script;
 };
 struct SystemScripts

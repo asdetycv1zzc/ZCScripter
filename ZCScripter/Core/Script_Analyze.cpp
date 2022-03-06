@@ -183,10 +183,10 @@ SystemScriptTypes Script_Analyze::_GetSystemScriptType(const SingleScript _k_Spl
 		return SystemScriptTypes::SetMusic;
 	if (_command.find(L"^sentence") != wstring::npos)
 		return SystemScriptTypes::SetSentenceEffects;
+	if (_command.find(L"^selectlabel") != wstring::npos)
+		return SystemScriptTypes::SetSelectLabel; //Fixed Issue
 	if (_command.find(L"^select") != wstring::npos)
 		return SystemScriptTypes::SetSelect;
-	if (_command.find(L"^selectlabel") != wstring::npos)
-		return SystemScriptTypes::SetSelectLabel;
 	if (_command.find(L"^se") != wstring::npos)
 		return SystemScriptTypes::SetSound;
 	if (_command.find(L"^camera") != wstring::npos)

@@ -177,7 +177,6 @@ public:
 	//QLIEVarientPool(unsigned long k_SpecificHash);
 	~QLIEVarientPool();
 };
-
 class HashExistedException : public std::exception
 {
 private:
