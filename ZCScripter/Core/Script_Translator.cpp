@@ -53,6 +53,8 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 	{
 		//Get filename
 		wstring _filename, _bgSwitchMode = wstring(DEFAULT_BACKGROUND_SWITCH_METHOD),_layer;
+		vector<pair<wstring, wstring> > _paras(_k_source._parameters.ParameterCount);
+		bool _visible = true;
 		if (_k_source._command.find_first_of(L"^bg") != wstring::npos)
 		{
 			auto beginPos = _k_source._command.find_first_of(L"^bg") + 3;
@@ -62,52 +64,80 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 		}
 		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
 		{
-			if (_k_source._parameters.Parameters[i].Parameter.substr(0,5) == L"file:")
-			{
-				if (_k_source._parameters.Parameters[i].Parameter.find(L"/") != wstring::npos)
-					_filename = wstring(_k_source._parameters.Parameters[i].Parameter.substr(_k_source._parameters.Parameters[i].Parameter.find_last_of(L"/") + 1));
-				else
-					_filename = wstring(_k_source._parameters.Parameters[i].Parameter.substr(_k_source._parameters.Parameters[i].Parameter.find_last_of(L":") + 1));
-				if (_filename.find(L"none") != wstring::npos)
-					_filename = wstring(DEFAULT_BACKGROUND);
-			}
-			
+			auto _temp_para = _s_Extract_QLIESubParameter(_k_source._parameters.Parameters[i].Parameter, DEFAULT_QLIE_SUBPARAMETER_SPLIT);
+			_paras[i] = _temp_para;
 		}
-		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
+		for (size_t i = 0; i < _paras.size(); i++)
 		{
-			if (_k_source._parameters.Parameters[i].Parameter[0] == L'$')
+			if (_paras[i].first == L"file")
 			{
-				_bgSwitchMode = wstring(_k_source._parameters.Parameters[i].Parameter.substr(1));
+				if (_paras[i].second.find(L"/") != wstring::npos)
+					_filename = _paras[i].second.substr(_paras[i].second.find_last_of(L"/") + 1);
+				else
+					_filename = _paras[i].second.substr(_paras[i].second.find_last_of(L":") + 1);
+				if (_filename.find(L"none") != wstring::npos)
+				{
+					_visible = false;
+					//_filename = wstring(DEFAULT_BACKGROUND);
+					_krkr_script.append(L"@image pages=\"" + wstring(DEFAULT_BACKGROUND_PAGE) + L"\" ");
+					_krkr_script.append(L"mode=\"" + wstring(DEFAULT_BACKGROUND_COVER_MODE) + L"\" ");
+					_krkr_script.append(L"layer=\"" + _layer + L"\" ");
+					_krkr_script.append(L"storage=\"" + _filename + L"\"");
+					_krkr_script.append(L"pos=\"" + wstring(DEFAULT_BACKGROUND_POSITION) + L"\" ");
+					_krkr_script.append(L"visible=\"0\"");
+				}
+			}	
+		}
+		for (size_t i = 0; i < _paras.size(); i++)
+		{
+			if (_paras[i].first[0] == L'$')
+			{
+				_bgSwitchMode = _paras[i].second.substr(1);
 				if (_bgSwitchMode != L"reset_bg")
 					_bgSwitchMode = DEFAULT_BACKGROUND_SWITCH_METHOD;
 				else
 					_bgSwitchMode = L"";
 			}
-			if (_k_source._parameters.Parameters[i].Parameter.find(L"show:false") != wstring::npos)
+			if (_paras[i].first == L"show")
 			{
-				_filename = wstring(DEFAULT_BACKGROUND);
-				g_BackgroundBuffer[_layer].assign(g_BackgroundFiles[g_BackgroundFiles.size() - 1].second);
-			}
-			if (_k_source._parameters.Parameters[i].Parameter.find(L"show:true") != wstring::npos)
-			{
-				if(_filename.empty())
-					_filename = g_BackgroundBuffer[_layer];
-			}
-			if (_k_source._parameters.Parameters[i].Parameter.substr(0, 3) == L"rep")
-			{
-				_filename = wstring(_k_source._parameters.Parameters[i].Parameter.substr(_k_source._parameters.Parameters[i].Parameter.find_last_of(L"/") + 1));
+				if (_paras[i].second == L"false")
+				{
+					_filename = wstring(DEFAULT_BACKGROUND);
+					g_BackgroundBuffer[_layer].assign(g_BackgroundFiles[g_BackgroundFiles.size() - 1][_layer]);
+				}
+				if (_paras[i].second == L"true")
+				{
+					if (_filename.empty())
+						_filename = g_BackgroundBuffer[_layer];
+				}
+				if (_paras[i].first.substr(0, 3) == L"rep")
+				{
+					_filename = _paras[i].second.substr(_paras[i].second.find_last_of(L"/") + 1);
+				}
+					
 			}
 		}
 		if (_filename.empty())
 			_filename = wstring(DEFAULT_BACKGROUND);
-		_krkr_script = L"@bg method=\"" + _bgSwitchMode + L"\" storage=\"" + _filename + L"\"";
+		if (_visible)
+		{
+			_krkr_script.append(L"@image pages=\"" + wstring(DEFAULT_BACKGROUND_PAGE) + L"\" ");
+			_krkr_script.append(L"mode=\"" + wstring(DEFAULT_BACKGROUND_COVER_MODE) + L"\" ");
+			_krkr_script.append(L"layer=\"" + _layer + L"\" ");
+			_krkr_script.append(L"storage=\"" + _filename + L"\" ");
+			_krkr_script.append(L"pos=\"" + wstring(DEFAULT_BACKGROUND_POSITION) + L"\" ");
+			_krkr_script.append(L"visible=\"" + wstring(DEFAULT_BACKGROUND_VISIBILITY) + L"\" ");
+		}
 		g_BackgroundScripts.push_back(_k_source.Script);
-		if(!_filename.empty())
-			g_BackgroundFiles.push_back(make_pair(_layer,_filename));
+		if (!_filename.empty())
+		{
+			map<wstring, wstring> _temp_map;
+			_temp_map[_layer] = _filename;
+			g_BackgroundFiles.push_back(_temp_map);
+		}
 		vector<wstring> _result;
 		_result.push_back(_krkr_script);
 		return _result;
-		break;
 	}
 	case SystemScriptTypes::SetSound: [[fallthrough]];
 	case SystemScriptTypes::SetMusic:
