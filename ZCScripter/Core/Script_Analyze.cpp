@@ -191,24 +191,27 @@ SystemScriptTypes Script_Analyze::_GetSystemScriptType(const SingleScript _k_Spl
 		return SystemScriptTypes::SetSound;
 	if (_command.find(L"^camera") != wstring::npos)
 		return SystemScriptTypes::SetCamera;
-	if (_command.find(L"include") != wstring::npos)
+	if (_command.find(L"^include") != wstring::npos)
 		return SystemScriptTypes::SetPostScript;
 	if (_command.find(L"^face") != wstring::npos)
 		return SystemScriptTypes::SetCharacterFace;
 	if (_command.find(L"^textani") != wstring::npos)
 		return SystemScriptTypes::__UNKNOWN_SCRIPT3;
 	if (_command.find(L"^message") != wstring::npos)
-		return SystemScriptTypes::SetMessageBox;
+		return SystemScriptTypes::SetMessage;
 	if (_command.find(L"^ef") != wstring::npos)
 		return SystemScriptTypes::SetEffect;
+	if (_command.find(L"^format") != wstring::npos)
+		return SystemScriptTypes::__UNKNOWN_SCRIPT4;
 	if (_command.find(L"\\jmp") != wstring::npos)
 		return SystemScriptTypes::_JMP;
 	if (_command.find(L"\\sub") != wstring::npos)
 		return SystemScriptTypes::_SUB;
-	if (_command.find(L"@@") != wstring::npos && _command.find(L"@@@") == wstring::npos)
-		return SystemScriptTypes::SetEntryName;
 	if (_command.find(L"@@@") != wstring::npos)
 		return SystemScriptTypes::SetIncludeFile;
+	if (_command.find(L"@@") != wstring::npos)
+		return SystemScriptTypes::SetEntryName;
+	
 	return SystemScriptTypes::_UNDEFINED_SystemScript;
 }
 SystemScriptTypes Script_Analyze::GetSystemScriptType(const SingleScript k_SplitedScript)

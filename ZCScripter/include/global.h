@@ -15,11 +15,25 @@ constexpr auto DEFAULT_BACKGROUND_PAGE = L"fore";
 constexpr auto DEFAULT_BACKGROUND_COVER_MODE = L"opaque";
 constexpr auto DEFAULT_BACKGROUND_POSITION = L"center";
 constexpr auto DEFAULT_BACKGROUND_VISIBILITY = L"1";
+constexpr auto DEFAULT_MUSIC_FADE_TIME = L"100";
 
-std::vector<std::wstring> g_AppearedCharacterModelNames;
+std::vector<std::map<std::wstring, std::wstring> > g_AppearedCharacterModelNames;//<Layer,File>
+std::map<std::wstring, std::wstring> g_CharacterBuffer;
 std::vector<std::wstring> g_BackgroundScripts;
 std::vector<std::map<std::wstring,std::wstring> > g_BackgroundFiles; //<Layer,File>
+std::vector<std::map<std::wstring,std::wstring> > g_CharacterFiles; //<Layer,File>
 std::map<std::wstring, std::wstring> g_BackgroundBuffer;
 std::pair<std::vector<std::wstring>,bool> g_LastSelectTextBuffer;
 std::vector<std::wstring> g_PlayedSounds;
+
+const std::map<std::wstring, std::wstring> g_SearchLastCharacterByLayer(const std::wstring& k_Layer) noexcept
+{
+	for (auto i = g_AppearedCharacterModelNames.end(); i != g_AppearedCharacterModelNames.begin();)
+	{
+		if ((*i).at(k_Layer).empty())
+			i--;
+		else
+			return *i;
+	}
+}
 

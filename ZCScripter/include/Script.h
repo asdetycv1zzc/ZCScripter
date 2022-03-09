@@ -32,14 +32,16 @@ enum SystemScriptTypes
 	SetSound,			//example:^se03,file:●波羅密多_loop,loop:true,vol:20
 								//^se03,vol:10,oncetime:2000
 	SetCamera,			//example:^camera,genfilter:"mode:abssin,cycle:500,fade:none,time:250,delay:0,infinity:false,target:position,x:0,y:0,z:-10"
-	SetCharacterFace,	//example:^face,show:false
+	SetCharacterFace,	//example:^face,show:false **UNKNOWN USAGE, NO FILE SELECTED AT ALL
+								//^face,file:月丘_顔_私服_017驚き1,show:true **THE ONLY PROPER USAGE
 	SetEntryName,		//example:@@MAIN
 	SetIncludeFile,		//example:@@@Avg\Header.s
 	SetSelect,			//example:^select,回应月丘女士的心情,果断拒绝
 	SetSelectLabel,		//example:^selectlabel,"@@k01_01sel_0","@@k01_01sel_1"
 	__UNKNOWN_SCRIPT3,	//example:^textani,file:none
-	SetMessageBox,		//example:^message,show:false
+	SetMessage,			//example:^message,show:false
 	SetEffect,			//example:^ef02,file:立ち絵/香恋_胸
+	__UNKNOWN_SCRIPT4,	//example:^format,log:continue
 
 	//------------------------------
 	//Engine-related System Script Types

@@ -96,7 +96,7 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 				if (_bgSwitchMode != L"reset_bg")
 					_bgSwitchMode = DEFAULT_BACKGROUND_SWITCH_METHOD;
 				else
-					_bgSwitchMode = L"";
+					_bgSwitchMode = wstring(DEFAULT_BACKGROUND_SWITCH_METHOD);
 			}
 			if (_paras[i].first == L"show")
 			{
@@ -112,7 +112,7 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 				}
 				if (_paras[i].first.substr(0, 3) == L"rep")
 				{
-					_filename = _paras[i].second.substr(_paras[i].second.find_last_of(L"/") + 1);
+					_filename = _paras[i].second.substr(_paras[i].second.find_last_of(L"/") + 1); //rep0 will overdrive
 				}
 					
 			}
@@ -142,7 +142,7 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 	case SystemScriptTypes::SetSound: [[fallthrough]];
 	case SystemScriptTypes::SetMusic:
 	{
-		wstring _filename,_volume,_loop;
+		wstring _filename, _volume, _loop, _method, _fadetime = wstring(DEFAULT_MUSIC_FADE_TIME);
 		vector<pair<wstring, wstring> > _paras(_k_source._parameters.ParameterCount);
 		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
 		{
@@ -157,12 +157,32 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 				_volume = _paras[i].second;
 			if (_paras[i].first == L"loop")
 				_loop = _paras[i].second;
+			if (_paras[i].first[0] == L'$')
+			{
+				if (_paras[i].second.find(L"$reset") != wstring::npos)
+				{
+					_fadetime = L"1";
+				}
+				if (_paras[i].second.find(L"$fadeout") != wstring::npos)
+				{
+					_fadetime = wstring(DEFAULT_MUSIC_FADE_TIME);
+				}
+			}
 		}
 		if (_filename.empty())
 			_filename = g_PlayedSounds[g_PlayedSounds.size() - 1];
 		else
 			g_PlayedSounds.push_back(_filename);
-		_krkr_script.append(L"@bgm storage=\"" + _filename + L"\" ");
+		if (_filename != L"none")
+			_krkr_script.append(L"@bgm storage=\"" + _filename + L"\" ");
+		else
+		{
+			_krkr_script = L"@fadeoutbgm time=\"" + _fadetime + L"\"";
+			vector<wstring> _result;
+			_result.push_back(_krkr_script);
+			return _result;
+		}
+		
 		if (!_loop.empty())
 		{
 			if (_loop == L"true")
@@ -180,8 +200,10 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 	{
 		wstring _allFilename = L"", _tempFilename;
 		wstring _alpha,_layer,_pos = wstring(DEFAULT_CHARACTER_POSITION);
+		vector<pair<wstring, wstring> > _paras(_k_source._parameters.ParameterCount);
 		bool _RequireRebuild = false;
 		bool _NoAlpha = true;
+		bool _ClearCharacter = false;
 		QLIE::_QLIEParameters _tempPara;
 		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
 		{
@@ -214,7 +236,7 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 						_modify_list[i].second = _modify_list[i].second.substr(0, _modify_list[i].second.size() - 1);
 				}
 				auto _LastUsedCharacter = g_AppearedCharacterModelNames[g_AppearedCharacterModelNames.size() - 1];
-				auto _temp_splitedLastUsedCharacter = splitwstr(_LastUsedCharacter, DEFAULT_CHARACTER_SEPERATE_CHAR);
+				auto _temp_splitedLastUsedCharacter = splitwstr(_LastUsedCharacter[_layer], DEFAULT_CHARACTER_SEPERATE_CHAR);
 				vector<wstring> _splitedLastUsedCharacter(_temp_splitedLastUsedCharacter.size(),L"");
 				for (size_t i = 0; i < _temp_splitedLastUsedCharacter.size(); i++)
 					_splitedLastUsedCharacter[i] = _temp_splitedLastUsedCharacter[i];
@@ -261,11 +283,28 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 		//获得角色位置
 		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
 		{
-			if (_k_source._parameters.Parameters[i].Parameter.substr(0, 2) == L"x:")
+			_paras[i] = _s_Extract_QLIESubParameter(_k_source._parameters.Parameters[i].Parameter, wstring(DEFAULT_QLIE_SUBPARAMETER_SPLIT));
+		}
+		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
+		{
+			if (_paras[i].first == L"x")
 			{
-				auto _temp_pos = _k_source._parameters.Parameters[i].Parameter.substr(3);
+				auto _temp_pos = _paras[i].second;
 				if (wstrcmp(L"$c_left", _temp_pos.c_str())) _pos = L"left";
 				else if (wstrcmp(L"$c_right", _temp_pos.c_str())) _pos = L"right";
+			}
+			if (_paras[i].first == L"show")
+			{
+				if (_paras[i].second == L"false")
+				{
+					_ClearCharacter = true;
+					g_CharacterBuffer[_layer].assign(_allFilename.begin(),_allFilename.end());
+				}
+				if (_paras[i].second == L"true")
+				{
+					if (_allFilename.empty())
+						_allFilename = g_CharacterBuffer[_layer];
+				}
 			}
 		}
 		if (_allFilename.find(L"none") == wstring::npos)
@@ -279,18 +318,18 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 			_krkr_script.append(L"pos=\"" + _pos + L"\" ");
 			
 		}
-		else
+		else if(_ClearCharacter || _allFilename.find(L"none") == wstring::npos)
 		{
 			_krkr_script.append(L"@clfg ");
 			_krkr_script.append(L"layer=\"" + _layer + L"\" ");
 			_krkr_script.append(L"method=\"" + wstring(DEFAULT_CHARACTER_SWITCH_METHOD) + L"\" ");
 		}
-		if (_allFilename.empty())
+		if(!_allFilename.empty())
 		{
-			_krkr_script.clear(); //连文件都没有就更不用说别的了 直接全删掉
-		}
-		else
-			g_AppearedCharacterModelNames.push_back(_allFilename);
+			map<wstring, wstring> _temp_map;
+			_temp_map[_layer] = _allFilename;
+			g_AppearedCharacterModelNames.push_back(_temp_map);
+		}	
 		break;
 	}
 	case SystemScriptTypes::SetPostScript: break;
