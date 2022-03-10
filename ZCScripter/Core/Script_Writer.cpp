@@ -20,11 +20,6 @@ const ScriptWriteStatus Script_Writer::_s_WriteScripts(const wstring& _k_DestAdd
 		for (size_t i = 0; i < _k_source.size(); i++)
 		{
 			auto _temp = _k_source[i];
-			if (_temp.find(L"・") != wstring::npos)
-			{
-				auto _pos = _temp.find(L"・");
-				_temp[_pos] = L'、';
-			}
 			_ScriptFile.write(_temp.c_str(), _temp.size());
 			_ScriptFile.write(L"\n", 1);
 			_ScriptFile.flush();

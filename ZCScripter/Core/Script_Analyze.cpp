@@ -46,7 +46,8 @@ SplitedScripts Script_Analyze::SplitLinesByCRLF()
 
 ScriptBlocks Script_Analyze::_SplitScript(const wchar_t* _ConvertedCRLF, unsigned long long _JudgeLines)
 {
-	vector<wstring> _source(_LineSplitedScriptContent.Scripts);
+	//vector<wstring> _source(_LineSplitedScriptContent.Scripts);
+	auto& _source = _LineSplitedScriptContent.Scripts;
 	ScriptBlocks _result;
 	SplitedScripts _TempResult;
 	auto _size = _source.size();
@@ -171,7 +172,7 @@ SortedScripts Script_Analyze::SortScript()
 	return _SortScript();
 }
 
-SystemScriptTypes Script_Analyze::_GetSystemScriptType(const SingleScript _k_SplitedScript)
+SystemScriptTypes Script_Analyze::_GetSystemScriptType(const SingleScript& _k_SplitedScript)
 {
 	SingleScript _temp(_k_SplitedScript);
 	auto _command = _temp.substr(0, _temp.find_first_of(L','));
@@ -214,12 +215,12 @@ SystemScriptTypes Script_Analyze::_GetSystemScriptType(const SingleScript _k_Spl
 	
 	return SystemScriptTypes::_UNDEFINED_SystemScript;
 }
-SystemScriptTypes Script_Analyze::GetSystemScriptType(const SingleScript k_SplitedScript)
+SystemScriptTypes Script_Analyze::GetSystemScriptType(const SingleScript& k_SplitedScript)
 {
 	return _GetSystemScriptType(k_SplitedScript);
 }
 
-CharacterScriptTypes Script_Analyze::_GetCharacterScriptType(const SingleScript _k_SplitedScript)
+CharacterScriptTypes Script_Analyze::_GetCharacterScriptType(const SingleScript& _k_SplitedScript)
 {
 	SingleScript _temp(_k_SplitedScript);
 	auto _command = _temp.substr(0, _temp.find_first_of(L','));
@@ -227,12 +228,12 @@ CharacterScriptTypes Script_Analyze::_GetCharacterScriptType(const SingleScript 
 		return CharacterScriptTypes::PlayVoice;
 	return CharacterScriptTypes::_UNDEFINED_CharacterScript;
 }
-CharacterScriptTypes Script_Analyze::GetCharacterScriptType(const SingleScript k_SplitedScript)
+CharacterScriptTypes Script_Analyze::GetCharacterScriptType(const SingleScript& k_SplitedScript)
 {
 	return _GetCharacterScriptType(k_SplitedScript);
 }
 
-wstring Script_Analyze::_GetSpeaker(const SplitedScripts _k_SplitedScripts)
+wstring Script_Analyze::_GetSpeaker(const SplitedScripts& _k_SplitedScripts)
 {
 	wstring _result;
 	for (unsigned long long i = 0; i < _k_SplitedScripts.ScriptAmount; i++)
@@ -250,7 +251,7 @@ wstring Script_Analyze::_GetSpeaker(const SplitedScripts _k_SplitedScripts)
 	}
 	return _result;
 }
-wstring Script_Analyze::GetSpeaker(const SplitedScripts k_SplitedScripts)
+wstring Script_Analyze::GetSpeaker(const SplitedScripts& k_SplitedScripts)
 {
 	return _GetSpeaker(k_SplitedScripts);
 }

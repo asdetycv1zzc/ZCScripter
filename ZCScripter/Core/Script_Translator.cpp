@@ -456,13 +456,6 @@ const TranslatedScripts Script_Translator::_s_TranslateAll(const SortedScripts& 
 		}
 		}
 	}
-	for (auto i = _result.begin(); i != _result.end();)
-	{
-		if (*i == L"")
-			i = _result.erase(i);
-		else
-			i++;
-	}
 	
 	for (auto i = _result.begin() + 1; i != _result.end();)
 	{

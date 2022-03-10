@@ -160,9 +160,9 @@ private:
 	ScriptBlocks _SplitScript(const wchar_t *_ConvertedCRLF = L"\n", unsigned long long _JudgeLines = 15);
 	SortedScripts _SortScript();
 
-	static std::wstring _GetSpeaker(const SplitedScripts _k_SplitedScripts);
-	static SystemScriptTypes _GetSystemScriptType(const SingleScript _k_SingleScript);
-	static CharacterScriptTypes _GetCharacterScriptType(const SingleScript _k_SingleScript);
+	static std::wstring _GetSpeaker(const SplitedScripts& _k_SplitedScripts);
+	static SystemScriptTypes _GetSystemScriptType(const SingleScript& _k_SingleScript);
+	static CharacterScriptTypes _GetCharacterScriptType(const SingleScript& _k_SingleScript);
 
 public:
 	SortedScripts _SortedScripts;
@@ -171,9 +171,9 @@ public:
 	ScriptBlocks SplitScript(const wchar_t *ConvertedCRLF = L"\n", unsigned long long JudgeLines = 15);
 	SortedScripts SortScript();
 
-	static std::wstring GetSpeaker(const SplitedScripts k_SplitedScripts);
-	static SystemScriptTypes GetSystemScriptType(const SingleScript k_SingleScript);
-	static CharacterScriptTypes GetCharacterScriptType(const SingleScript k_SingleScript);
+	static std::wstring GetSpeaker(const SplitedScripts& k_SplitedScripts);
+	static SystemScriptTypes GetSystemScriptType(const SingleScript& k_SingleScript);
+	static CharacterScriptTypes GetCharacterScriptType(const SingleScript& k_SingleScript);
 
 	Script_Analyze();
 	Script_Analyze(const char *);
