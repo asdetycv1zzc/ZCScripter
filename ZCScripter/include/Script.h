@@ -154,7 +154,7 @@ private:
 	ScriptContent _ScriptContent;
 	SplitedScripts _LineSplitedScriptContent;
 	ScriptBlocks _ScriptBlocks;
-	SortedScripts _SortedScripts;
+	
 
 	SplitedScripts _SplitLinesByCRLF();
 	ScriptBlocks _SplitScript(const wchar_t *_ConvertedCRLF = L"\n", unsigned long long _JudgeLines = 15);
@@ -165,6 +165,8 @@ private:
 	static CharacterScriptTypes _GetCharacterScriptType(const SingleScript _k_SingleScript);
 
 public:
+	SortedScripts _SortedScripts;
+
 	SplitedScripts SplitLinesByCRLF();
 	ScriptBlocks SplitScript(const wchar_t *ConvertedCRLF = L"\n", unsigned long long JudgeLines = 15);
 	SortedScripts SortScript();

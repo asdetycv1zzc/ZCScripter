@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -25,6 +25,10 @@ ScriptContent Script_Read::_ReadScript()
 
 		while (_File.read((char *)&_TempContent[i], sizeof(wchar_t)))
 		{
+			if (_TempContent[i] == L'・')
+				_TempContent[i] = L'·';
+			if (_TempContent[i] == L'♪')
+				_TempContent[i] = L' ';
 			_Content[i] = _TempContent[i];
 			i++;
 		}
