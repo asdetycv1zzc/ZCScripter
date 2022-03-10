@@ -129,7 +129,7 @@ SortedScripts Script_Analyze::_SortScript()
 	{
 		for (unsigned long long j = 0; j < _ScriptBlocks.Blocks[i].ScriptAmount; j++)
 		{
-			if (_ScriptBlocks.Blocks[i].Scripts[j][0] == L'^' || _ScriptBlocks.Blocks[i].Scripts[j].find(L"@@") != wstring::npos)
+			if (_ScriptBlocks.Blocks[i].Scripts[j][0] == L'^' || _ScriptBlocks.Blocks[i].Scripts[j].find(L"@@") != wstring::npos || _ScriptBlocks.Blocks[i].Scripts[j][0] == L'\\')
 			{
 				SystemScript _temp;
 				_temp.Script = _ScriptBlocks.Blocks[i].Scripts[j];

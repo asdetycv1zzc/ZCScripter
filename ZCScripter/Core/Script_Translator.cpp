@@ -437,6 +437,8 @@ const pair<wstring,wstring> Script_Translator::_s_Extract_QLIESubParameter(const
 	pair<wstring, wstring> _result;
 	auto _first = _k_source.substr(0, _k_source.find_first_of(_k_split));
 	auto _second = _k_source.substr(_k_source.find_first_of(_k_split) + 1);
+	if (_first == _second && _k_source.find(_k_split) == wstring::npos)
+		_first = L"";
 	_result.first = _first;
 	_result.second = _second;
 	return _result;
