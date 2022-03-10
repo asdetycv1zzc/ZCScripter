@@ -101,6 +101,10 @@ ScriptBlocks Script_Analyze::_SplitScript(const wchar_t* _ConvertedCRLF, unsigne
 		_beginPos = _endPos + _DeleteContentSize;
 	}
 	*/
+	
+	_TempResult.ScriptAmount = _TempResult.Scripts.size();//Fixed Bug
+	_TempResult.Status = 0;
+	_result.Blocks.push_back(_TempResult);
 	_result.BlockAmount = _result.Blocks.size();
 	_result.Status = 0;
 
