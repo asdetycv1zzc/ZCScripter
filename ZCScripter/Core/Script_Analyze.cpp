@@ -78,6 +78,10 @@ ScriptBlocks Script_Analyze::_SplitScript(const wchar_t* _ConvertedCRLF, unsigne
 				_TempResult.Scripts.clear();
 				_counts = 0;
 			}
+			else
+			{
+				throw exception();
+			}
 			i++;
 		}
 	}

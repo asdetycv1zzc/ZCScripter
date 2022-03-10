@@ -32,6 +32,9 @@ std::map<std::wstring, std::wstring> g_BackgroundBuffer;
 std::pair<std::vector<std::wstring>,bool> g_LastSelectTextBuffer;
 std::vector<std::wstring> g_PlayedSounds;
 
+std::vector<std::wstring> g_ResultStr;
+std::vector<std::wstring> g_Avg_SelectCurLabel;
+
 const std::wstring g_SearchLastItemByLayer(const std::wstring& k_Layer,const ItemTypes& k_type) noexcept
 {
 	std::wstring _result = L"";
