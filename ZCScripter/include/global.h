@@ -17,6 +17,12 @@ constexpr auto DEFAULT_BACKGROUND_POSITION = L"center";
 constexpr auto DEFAULT_BACKGROUND_VISIBILITY = L"1";
 constexpr auto DEFAULT_MUSIC_FADE_TIME = L"100";
 
+enum ItemTypes
+{
+	Background,
+	Character,
+};
+
 std::vector<std::map<std::wstring, std::wstring> > g_AppearedCharacterModelNames;//<Layer,File>
 std::map<std::wstring, std::wstring> g_CharacterBuffer;
 std::vector<std::wstring> g_BackgroundScripts;
@@ -26,14 +32,41 @@ std::map<std::wstring, std::wstring> g_BackgroundBuffer;
 std::pair<std::vector<std::wstring>,bool> g_LastSelectTextBuffer;
 std::vector<std::wstring> g_PlayedSounds;
 
-const std::map<std::wstring, std::wstring> g_SearchLastCharacterByLayer(const std::wstring& k_Layer) noexcept
+const std::wstring g_SearchLastItemByLayer(const std::wstring& k_Layer,const ItemTypes& k_type) noexcept
 {
-	for (auto i = g_AppearedCharacterModelNames.end(); i != g_AppearedCharacterModelNames.begin();)
+	std::wstring _result = L"";
+	switch (k_type)
 	{
-		if ((*i).at(k_Layer).empty())
-			i--;
-		else
-			return *i;
+	case ItemTypes::Background:
+	{
+		for (auto i = g_BackgroundFiles.begin(); i != g_BackgroundFiles.end();)
+		{
+			if ((*i)[k_Layer].empty())
+				i++;
+			else
+			{
+				_result = (*i)[k_Layer];
+				i++;
+			}
+				
+		}
+		return _result;;
 	}
+	case ItemTypes::Character:
+	{
+		for (auto i = g_AppearedCharacterModelNames.begin(); i != g_AppearedCharacterModelNames.end();)
+		{
+			if ((*i)[k_Layer].empty())
+				i--;
+			else
+			{
+				_result = (*i)[k_Layer];
+				i++;
+			}
+		}
+		return _result;
+	}
+	}
+	
 }
 

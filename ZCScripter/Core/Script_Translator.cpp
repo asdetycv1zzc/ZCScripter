@@ -102,8 +102,19 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 			{
 				if (_paras[i].second == L"false")
 				{
-					_filename = wstring(DEFAULT_BACKGROUND);
-					g_BackgroundBuffer[_layer].assign(g_BackgroundFiles[g_BackgroundFiles.size() - 1][_layer]);
+					if (!_filename.empty() && _filename != L"none")
+					{
+						g_BackgroundBuffer[_layer].assign(_filename);
+						_visible = false;
+					}
+					else if (_filename == L"none")
+					{
+						_filename = wstring(DEFAULT_BACKGROUND);
+					}
+					else
+					{
+						_filename = wstring(g_SearchLastItemByLayer(_layer,ItemTypes::Background));
+					}
 				}
 				if (_paras[i].second == L"true")
 				{
@@ -127,6 +138,10 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 			_krkr_script.append(L"storage=\"" + _filename + L"\" ");
 			_krkr_script.append(L"pos=\"" + wstring(DEFAULT_BACKGROUND_POSITION) + L"\" ");
 			_krkr_script.append(L"visible=\"" + wstring(DEFAULT_BACKGROUND_VISIBILITY) + L"\" ");
+		}
+		else
+		{
+
 		}
 		g_BackgroundScripts.push_back(_k_source.Script);
 		if (!_filename.empty())
@@ -456,11 +471,17 @@ const TranslatedScripts Script_Translator::_s_TranslateAll(const SortedScripts& 
 		}
 		}
 	}
-	
+	for (auto i = _result.begin() + 1; i != _result.end();)
+	{
+		if ((*i).empty())
+			i = _result.erase(i);
+		else
+			i++;
+	}
 	for (auto i = _result.begin() + 1; i != _result.end();)
 	{
 		if (*i == *(i - 1))
-			i = _result.erase(i);
+			i = _result.erase(i - 1);
 		else
 			i++;
 	}

@@ -19,8 +19,8 @@ const ScriptWriteStatus Script_Writer::_s_WriteScripts(const wstring& _k_DestAdd
 		_ScriptFile.imbue(locale("chs"));
 		for (size_t i = 0; i < _k_source.size(); i++)
 		{
-			auto _temp = _k_source[i];
-			_ScriptFile.write(_temp.c_str(), _temp.size());
+			if (_k_source[i].empty()) continue;
+			_ScriptFile.write(_k_source[i].c_str(), _k_source[i].size());
 			_ScriptFile.write(L"\n", 1);
 			_ScriptFile.flush();
 		}
