@@ -6,6 +6,7 @@
 #include<Translator.h>
 #include<global.h>
 #include<wstring_extend.h>
+#include<System.h>
 using namespace std;
 
 const bool _cmpByFileNum(const QLIE::_QLIEParameter_NormalForm& _a, const QLIE::_QLIEParameter_NormalForm& _b)
@@ -398,6 +399,7 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 	}
 	case SystemScriptTypes::_JMP:
 	{
+		QLIESystem _sys(_k_source._Filename);
 		vector<pair<wstring, wstring> > _paras(_k_source._parameters.ParameterCount);
 		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
 		{

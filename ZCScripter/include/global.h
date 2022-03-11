@@ -32,6 +32,8 @@ std::map<std::wstring, std::wstring> g_BackgroundBuffer;
 std::pair<std::vector<std::wstring>,bool> g_LastSelectTextBuffer;
 std::vector<std::wstring> g_PlayedSounds;
 
+std::wstring g__RootFile;
+
 std::vector<std::wstring> g_ResultStr;
 std::vector<std::wstring> g_Avg_SelectCurLabel;
 

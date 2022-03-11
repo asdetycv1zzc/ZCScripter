@@ -1,72 +1,77 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <Assemble.h>
 using namespace std;
 
-/*
-bool QLIEVarientPool::_CmpVarientByHash(QLIE::_QLIEVarient a, QLIE::_QLIEVarient b)
+
+const bool QLIEVarientPool::_CmpVarientByHash(const QLIE::_QLIEVarient& a, const QLIE::_QLIEVarient& b)
 {
-    return a._Hash < b._Hash;
+	return a._Hash < b._Hash;
 }
-void QLIEVarientPool::_SortVarientByHash()
+const void QLIEVarientPool::_SortVarientByHash()
 {
-    sort(_Varients.begin(), _Varients.end(), _CmpVarientByHash);
+	sort(_Varients.begin(), _Varients.end(), _CmpVarientByHash);
 }
-bool QLIEVarientPool::_AddVarient(QLIE::_QLIEVarient _k_Varient)
+const bool QLIEVarientPool::_AddVarient(const QLIE::_QLIEVarient& _k_Varient)
 {
-    if (_Check_HashIsExist(_k_Varient._Hash))
-        return false;
-    _Varients.push_back(_k_Varient);
-    return true;
+	if (_Check_HashIsExist(_k_Varient._Hash))
+		return false;
+	_Varients.push_back(_k_Varient);
+	return true;
 }
-bool QLIEVarientPool::_AddVarient(std::wstring _k_Token, std::wstring _k_Value, QLIE::_QLIEParameterTypes _k_Type)
+const bool QLIEVarientPool::_AddVarient(const std::wstring& _k_Token, const std::wstring& _k_Value, const QLIE::_QLIEParameterTypes _k_Type)
 {
-    QLIE::_QLIEVarient _temp;
-    _temp.Token = _k_Token;
-    _temp.Value = _k_Value;
-    _temp.Type = _k_Type;
-    _temp._Hash = _AllocateNewHash();
-    _Varients.push_back(_temp);
-    return true;
+	QLIE::_QLIEVarient _temp;
+	_temp.Token = _k_Token;
+	_temp.Value = _k_Value;
+	_temp.Type = _k_Type;
+	_temp._Hash = _AllocateNewHash();
+	_Varients.push_back(_temp);
+	return true;
 }
-bool QLIEVarientPool::_AddVarient(unsigned long _k_Hash, std::wstring _k_Value, QLIE::_QLIEParameterTypes _k_Type)
+const bool QLIEVarientPool::_AddVarient(const unsigned long& _k_Hash, const std::wstring& _k_Value, const QLIE::_QLIEParameterTypes _k_Type)
 {
-    if (_Check_HashIsExist(_k_Hash))
-        return false;
-    QLIE::_QLIEVarient _temp;
-    _temp.Token = L"_Unspecified";
-    _temp._Hash = _k_Hash;
-    _temp.Value = _k_Value;
-    _temp.Type = _k_Type;
-    return _AddVarient(_temp);
+	if (_Check_HashIsExist(_k_Hash))
+		return false;
+	QLIE::_QLIEVarient _temp;
+	_temp.Token = L"_Unspecified";
+	_temp._Hash = _k_Hash;
+	_temp.Value = _k_Value;
+	_temp.Type = _k_Type;
+	return _AddVarient(_temp);
 }
-bool QLIEVarientPool::_DeleteVarient(QLIE::_QLIEVarient _k_Varient)
+const bool QLIEVarientPool::_DeleteVarient(const QLIE::_QLIEVarient& _k_Varient)
 {
-    if (!_Check_HashIsExist(_k_Varient._Hash))
-        return false;
-    _SetVarient(_k_Varient._Hash, _NULLVarient);
-    _DeletedHashes.push_back(_k_Varient._Hash);
-    return false;
+	if (!_Check_HashIsExist(_k_Varient._Hash))
+		return false;
+	_SetVarient(_k_Varient._Hash, _NULLVarient);
+	_DeletedHashes.push_back(_k_Varient._Hash);
+	return false;
 }
-bool QLIEVarientPool::_DeleteVarient(std::wstring _k_Token, std::wstring _k_Value)
+const bool QLIEVarientPool::_DeleteVarient(const std::wstring& _k_Token, const std::wstring& _k_Value)
 {
-    auto _temp_Hash = _GetHashByToken(_k_Token);
-    if(!_Check_TokenValuePaired(_GetTokenByValue(_k_Token),_k_Value))
-        return false;
-    if (_Check_VarientIsDeleted(_temp_Hash))
-        return false;
-    _DeletedHashes.push_back(_temp_Hash);
-    return true;
+	auto _temp_Hash = _GetHashByToken(_k_Token);
+	if (!_Check_TokenValuePaired(_k_Token, _k_Value))
+		return false;
+	if (_Check_VarientIsDeleted(_temp_Hash))
+		return false;
+	_DeletedHashes.push_back(_temp_Hash);
+	return true;
 }
-bool QLIEVarientPool::_DeleteVarient(unsigned long _k_Hash)
+const bool QLIEVarientPool::_DeleteVarient(const unsigned long& _k_Hash)
 {
-    if (_Check_VarientIsDeleted(_k_Hash))
-        return false;
-    _DeletedHashes.push_back(_k_Hash);
-    return true;
+	if (_Check_VarientIsDeleted(_k_Hash))
+		return false;
+	_DeletedHashes.push_back(_k_Hash);
+	return true;
 }
-bool QLIEVarientPool::_DeleteVarient(unsigned long _k_Hash, std::wstring _k_Value)
+const bool QLIEVarientPool::_DeleteVarient(const unsigned long& _k_Hash, const std::wstring& _k_Value)
 {
-    return false;
+	if (!_Check_HashValuePaired(_k_Hash, _k_Value))
+		return false;
+	if (_Check_VarientIsDeleted(_k_Hash))
+		return false;
+	_DeletedHashes.push_back(_k_Hash);
+	return true;
 }
-*/
