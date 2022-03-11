@@ -116,7 +116,7 @@ private:
 	/*
 	所有Hash值都从0开始
 	*/
-	unsigned long _Self_Hash;
+	unsigned long _Self_Hash;//这个变量池自身的Hash值
 	unsigned long _RegisteredVarientAmount;
 	std::vector<QLIE::_QLIEVarient> _Varients;
 	std::vector<std::pair<unsigned long, unsigned long>> _VarientHash_SourceOrder;
@@ -137,7 +137,7 @@ private:
 	const bool _DeleteVarient(const unsigned long& _k_Hash);
 	const bool _DeleteVarient(const unsigned long& _k_Hash, const std::wstring& _k_Value);
 	const bool _SetVarient(const QLIE::_QLIEVarient& _k_SourceVarient, const QLIE::_QLIEVarient& _k_DestVarient);
-	const bool _SetVarient(const QLIE::_QLIEVarient* _k_SourceVarientPointer, const QLIE::_QLIEVarient& _k_DestVarient);
+	const bool _SetVarient(QLIE::_QLIEVarient* _k_SourceVarientPointer, const QLIE::_QLIEVarient& _k_DestVarient);
 	const bool _SetVarient(const unsigned long& _k_Hash, const std::wstring& _k_Token, std::wstring _k_Value);
 	const bool _SetVarient(const unsigned long& _k_Hash, const std::wstring& _k_Value);
 	const bool _SetVarient(const unsigned long& _k_Hash, const QLIE::_QLIEVarient& _k_DestVarient);
@@ -153,16 +153,17 @@ private:
 	const bool _Check_TokenValuePaired(const std::wstring& _k_Token, const std::wstring& _k_Value);
 	const bool _Check_HashValuePaired(const unsigned long& _k_hash, const std::wstring& _k_Value);
 	const bool _Check_SourceDestPaired(const QLIE::_QLIEVarient& _k_SourceVarient, const QLIE::_QLIEVarient& _k_DestVarient);
+	const bool _Check_SourceDestPaired(const QLIE::_QLIEVarient* _k_SourceVarientPointer, const QLIE::_QLIEVarient& _k_DestVarient);
 
 	const unsigned long _GetVarientAmount();
 	const unsigned long _AllocateNewHash();
 
-	const QLIE::_QLIEVarient _GetVarient(const std::wstring& _k_Token);
-	const QLIE::_QLIEVarient _GetVarient(const unsigned long& _k_Hash);
-	const QLIE::_QLIEVarient _GetVarient(const std::wstring& _k_Token, const unsigned long& _k_Hash);
-	const QLIE::_QLIEVarient* _GetVarientPointer(const std::wstring& _k_Token);
-	const QLIE::_QLIEVarient* _GetVarientPointer(const unsigned long& _k_Hash);
-	const QLIE::_QLIEVarient* _GetVarientPointer(const std::wstring& _k_Token, const unsigned long& _k_Hash);
+	QLIE::_QLIEVarient _GetVarient(const std::wstring& _k_Token);
+	QLIE::_QLIEVarient _GetVarient(const unsigned long& _k_Hash);
+	QLIE::_QLIEVarient _GetVarient(const std::wstring& _k_Token, const unsigned long& _k_Hash);
+	QLIE::_QLIEVarient* _GetVarientPointer(const std::wstring& _k_Token);
+	QLIE::_QLIEVarient* _GetVarientPointer(const unsigned long& _k_Hash);
+	QLIE::_QLIEVarient* _GetVarientPointer(const std::wstring& _k_Token, const unsigned long& _k_Hash);
 
 	const unsigned long _GetHashByToken(const std::wstring _k_Token);
 	const unsigned long _GetHashByToken(const std::wstring _k_Token, std::wstring _k_Value);
@@ -172,6 +173,7 @@ private:
 
 	const std::wstring _GetValueByHash(const unsigned long _k_Hash);
 
+	inline const bool _Refresh();
 public:
 	QLIEVarientPool();
 	//QLIEVarientPool(unsigned long k_SpecificHash);

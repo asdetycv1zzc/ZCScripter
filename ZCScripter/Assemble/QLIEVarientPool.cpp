@@ -75,3 +75,34 @@ const bool QLIEVarientPool::_DeleteVarient(const unsigned long& _k_Hash, const s
 	_DeletedHashes.push_back(_k_Hash);
 	return true;
 }
+const bool QLIEVarientPool::_SetVarient(const QLIE::_QLIEVarient& _k_SourceVarient, const QLIE::_QLIEVarient& _k_DestVarient)
+{
+	_Refresh();
+	if (!_Check_SourceDestPaired(_k_SourceVarient, _k_DestVarient))
+		return false;
+	auto _temp = _GetVarientPointer(_k_SourceVarient._Hash);
+	_temp->Value = _k_DestVarient.Value;
+	_Refresh();
+	return true;
+}
+const bool QLIEVarientPool::_SetVarient(QLIE::_QLIEVarient* _k_SourceVarientPointer, const QLIE::_QLIEVarient& _k_DestVarient)
+{
+	_Refresh();
+	if(!_Check_SourceDestPaired(_k_SourceVarientPointer, _k_DestVarient))
+		return false;
+	_k_SourceVarientPointer->Value = _k_DestVarient.Value;
+	_Refresh();
+	return true;
+}
+const bool QLIEVarientPool::_SetVarient(const unsigned long& _k_Hash, const std::wstring& _k_Token, std::wstring _k_Value)
+{
+	_Refresh();
+	auto _temp = _GetVarientPointer(_k_Hash);
+	if (!_Check_TokenValuePaired(_k_Token, _k_Value))
+		return false;
+	if (!_Check_HashValuePaired(_k_Hash, _k_Value))
+		return false;
+	_temp->Value = _k_Value;
+	_Refresh();
+	return true;
+}
