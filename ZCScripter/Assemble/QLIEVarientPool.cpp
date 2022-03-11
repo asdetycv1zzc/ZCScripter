@@ -9,10 +9,12 @@ const bool QLIEVarientPool::_CmpVarientByHash(const QLIE::_QLIEVarient& a, const
 {
 	return a._Hash < b._Hash;
 }
+
 const void QLIEVarientPool::_SortVarientByHash()
 {
 	sort(_Varients.begin(), _Varients.end(), _CmpVarientByHash);
 }
+
 const bool QLIEVarientPool::_AddVarient(const QLIE::_QLIEVarient& _k_Varient)
 {
 	if (_Check_HashIsExist(_k_Varient._Hash))
@@ -105,4 +107,8 @@ const bool QLIEVarientPool::_SetVarient(const unsigned long& _k_Hash, const std:
 	_temp->Value = _k_Value;
 	_Refresh();
 	return true;
+}
+const bool QLIEVarientPool::_SetVarient(const unsigned long& _k_Hash, std::wstring _k_Value)
+{
+
 }
