@@ -5,15 +5,15 @@
 #include <Assemble.h>
 using namespace std;
 
-const bool QLIEVarientPool::_CmpVarientByHash(const QLIE::_QLIEVarient& a, const QLIE::_QLIEVarient& b)
+inline const bool QLIEVarientPool::_CmpVarientByHash(const QLIE::_QLIEVarient& a, const QLIE::_QLIEVarient& b)
 {
 	return a._Hash < b._Hash;
 }
-const void QLIEVarientPool::_SortVarientByHash()
+inline const void QLIEVarientPool::_SortVarientByHash()
 {
 	sort(_Varients.begin(), _Varients.end(), _CmpVarientByHash);
 }
-const void QLIEVarientPool::_SortVarientByHash_Reversed()
+inline const void QLIEVarientPool::_SortVarientByHash_Reversed()
 {
 	sort(_Varients.rbegin(), _Varients.rend(), _CmpVarientByHash);
 }
@@ -231,16 +231,16 @@ const bool QLIEVarientPool::_ValidateVarient(const QLIE::_QLIEVarient* _k_Source
 	return _Check_SourceDestPaired(_temp, *_k_SourceVarientPointer);
 }
 
-const unsigned long QLIEVarientPool::_GetVarientAmount()
+const unsigned long QLIEVarientPool::_GetVarientAmount() noexcept
 {
 	_Refresh();
 	return _RegisteredVarientAmount - _DeletedVarientAmount;
 }
-const unsigned long QLIEVarientPool::_GetRegisteredHashAmount()
+const unsigned long QLIEVarientPool::_GetRegisteredHashAmount() noexcept
 {
 	return _Registered_Hashes.size();
 }
-const unsigned long QLIEVarientPool::_AllocateNewHash()
+const unsigned long QLIEVarientPool::_AllocateNewHash() noexcept
 {
 	_Refresh();
 	auto _NewHash = _GetRegisteredHashAmount();
@@ -287,23 +287,132 @@ QLIE::_QLIEVarient* QLIEVarientPool::_GetVarientPointer(const unsigned long& _k_
 	_Refresh();
 	return &(_GetVarient(_k_Hash));
 }
-QLIE::_QLIEVarient* QLIEVarientPool::_GetVarientPointer(const std::wstring& _k_Token)
+QLIE::_QLIEVarient* QLIEVarientPool::_GetVarientPointer(const wstring& _k_Token)
 {
 	_Refresh();
 	auto _temp = _GetHashByToken(_k_Token);
 	return _GetVarientPointer(_temp);
 }
-QLIE::_QLIEVarient* QLIEVarientPool::_GetVarientPointer(const std::wstring& _k_Token, const unsigned long& _k_Hash)
+QLIE::_QLIEVarient* QLIEVarientPool::_GetVarientPointer(const wstring& _k_Token, const unsigned long& _k_Hash)
 {
 	_Refresh();
 	if (!_Check_TokenHashPaired(_k_Hash, _k_Token))
 		return &_NULLVarient;
 	return &(_GetVarient(_k_Token, _k_Hash));
 }
-
-const unsigned long QLIEVarientPool::_GetHashByToken(const std::wstring& _k_Token)
+QLIE::_QLIEVarient* QLIEVarientPool::_GetVarientPointer(const QLIE::_QLIEVarient _k_SourceVarient)
+{
+	_Refresh();
+	if (!_ValidateVarient(_k_SourceVarient))
+		return &_NULLVarient;
+	return const_cast<QLIE::_QLIEVarient*>(&_k_SourceVarient);
+}
+const unsigned long QLIEVarientPool::_GetHashByToken(const wstring& _k_Token)
 {
 	_Refresh();
 	_SortVarientByHash_Reversed();
-	auto _pos = find(_Varients.begin(),_Varients.end(),)
+	for (size_t i = 0; i < _GetRegisteredHashAmount(); i++)
+	{
+		if (_Varients[i]._IsDeleted) continue;
+		if (_Varients[i].Token == _k_Token)
+			return _Varients[i]._Hash;
+	}
+	return -1;
+}
+const unsigned long QLIEVarientPool::_GetHashByToken(const wstring& _k_Token, wstring& _k_Value)
+{
+	_Refresh();
+	_SortVarientByHash_Reversed();
+	for (size_t i = 0; i < _GetRegisteredHashAmount(); i++)
+	{
+		if (_Varients[i]._IsDeleted) continue;
+		if (_Varients[i].Token == _k_Token)
+		{
+			if (!_Check_TokenValuePaired(_k_Token, _k_Value)) continue;
+			else return _Varients[i]._Hash;
+		}
+	}
+	return -1;
+}
+
+const wstring QLIEVarientPool::_GetTokenByValue(const wstring& _k_Value)
+{
+	_Refresh();
+	_SortVarientByHash_Reversed();
+	for (size_t i = 0; i < _GetRegisteredHashAmount(); i++)
+	{
+		if (_Varients[i]._IsDeleted) continue;
+		if (_Varients[i].Value == _k_Value)
+			return _Varients[i].Token;
+	}
+	return L"";
+}
+const wstring QLIEVarientPool::_GetTokenByHash(const unsigned long& _k_Hash)
+{
+	_Refresh();
+	auto _temp = _GetVarientPointer(_k_Hash);
+	return _temp->Token;
+}
+
+inline const bool QLIEVarientPool::_Refresh(const unsigned long _k_ResortStandard) noexcept
+{
+	_RegisteredVarientAmount = _Registered_Hashes.size();
+	_DeletedVarientAmount = _DeletedHashes.size();
+	if (_RefreshTimes % _k_ResortStandard == 0)
+		_SortVarientByHash();
+	_RefreshTimes += 1;
+	return true;
+}
+
+QLIEVarientPool::QLIEVarientPool()
+{
+	_RefreshTimes = 0;
+	_Self_Hash = 0;
+	_RegisteredVarientAmount = 0;
+	_DeletedVarientAmount = 0;
+	_NULLVarient.Token = L"_Unspecified";
+	_NULLVarient.Type = QLIE::_QLIEParameterTypes::_UNDEFINED__QLIEParameterTypes;
+	_NULLVarient.Value = L"";
+	_NULLVarient._Hash = -1;
+	_NULLVarient._IsDeleted = false;
+}
+QLIEVarientPool::QLIEVarientPool(unsigned long k_SpecificHash)
+{
+	_RefreshTimes = 0;
+	_Self_Hash = k_SpecificHash;
+	_RegisteredVarientAmount = 0;
+	_DeletedVarientAmount = 0;
+	_NULLVarient.Token = L"_Unspecified";
+	_NULLVarient.Type = QLIE::_QLIEParameterTypes::_UNDEFINED__QLIEParameterTypes;
+	_NULLVarient.Value = L"";
+	_NULLVarient._Hash = -1;
+	_NULLVarient._IsDeleted = false;
+}
+QLIEVarientPool::QLIEVarientPool(const QLIE::_QLIEVarient& k_SpecificNULLVar)
+{
+	_RefreshTimes = 0;
+	_Self_Hash = 0;
+	_RegisteredVarientAmount = 0;
+	_DeletedVarientAmount = 0;
+	_NULLVarient.Token = k_SpecificNULLVar.Token;
+	_NULLVarient.Type = k_SpecificNULLVar.Type;
+	_NULLVarient.Value = k_SpecificNULLVar.Value;
+	_NULLVarient._Hash = k_SpecificNULLVar._Hash;
+	_NULLVarient._IsDeleted = k_SpecificNULLVar._IsDeleted;
+}
+QLIEVarientPool::QLIEVarientPool(unsigned long k_SpecificHash, const QLIE::_QLIEVarient& k_SpecificNULLVar)
+{
+	_RefreshTimes = 0;
+	_Self_Hash = k_SpecificHash;
+	_RegisteredVarientAmount = 0;
+	_DeletedVarientAmount = 0;
+	_NULLVarient.Token = k_SpecificNULLVar.Token;
+	_NULLVarient.Type = k_SpecificNULLVar.Type;
+	_NULLVarient.Value = k_SpecificNULLVar.Value;
+	_NULLVarient._Hash = k_SpecificNULLVar._Hash;
+	_NULLVarient._IsDeleted = k_SpecificNULLVar._IsDeleted;
+}
+QLIEVarientPool::~QLIEVarientPool()
+{
+
 }

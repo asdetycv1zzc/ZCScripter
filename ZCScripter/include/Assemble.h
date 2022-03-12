@@ -92,6 +92,7 @@ namespace QLIE
 		unsigned long _Hash = -1;														//变量的唯一标识符
 		std::wstring Value;																//变量值
 		_QLIEParameterTypes Type = _QLIEParameterTypes::_UNDEFINED__QLIEParameterTypes;	//变量类型
+		bool _IsDeleted = false;														//变量是否被删除
 	};
 };
 
@@ -120,16 +121,19 @@ private:
 	unsigned long _Self_Hash;				//这个变量池自身的Hash值
 	unsigned long _RegisteredVarientAmount;	//所有Hash，包括已经删除了的
 	unsigned long _DeletedVarientAmount;
+	size_t _RefreshTimes;
 
 	std::vector<QLIE::_QLIEVarient> _Varients;
 	std::vector<unsigned long> _Registered_Hashes;//所有Hash，包括已经删除了的
 	std::map<unsigned long, QLIE::_QLIEVarient> _VarientHashMap;
+	std::map<unsigned long, std::wstring> _HashTokenMap;
 	std::vector<unsigned long> _DeletedHashes;
 	QLIE::_QLIEVarient _NULLVarient;
 
-	const static bool _CmpVarientByHash(const QLIE::_QLIEVarient& a, const QLIE::_QLIEVarient& b);
-	const void _SortVarientByHash();
-	const void _SortVarientByHash_Reversed();
+public:
+	inline const static bool _CmpVarientByHash(const QLIE::_QLIEVarient& a, const QLIE::_QLIEVarient& b);
+	inline const void _SortVarientByHash();
+	inline const void _SortVarientByHash_Reversed();
 
 	const bool _AddVarient(const QLIE::_QLIEVarient& _k_Varient);
 	const bool _AddVarient(const std::wstring& _k_Token, const std::wstring& _k_Value, const QLIE::_QLIEParameterTypes _k_Type = QLIE::_QLIEParameterTypes::_UNDEFINED__QLIEParameterTypes);
@@ -161,9 +165,9 @@ private:
 	const bool _ValidateVarient(const QLIE::_QLIEVarient& _k_SourceVarient);
 	const bool _ValidateVarient(const QLIE::_QLIEVarient* _k_SourceVarientPointer);
 
-	const unsigned long _GetVarientAmount();
-	const unsigned long _GetRegisteredHashAmount();
-	const unsigned long _AllocateNewHash();
+	inline const unsigned long _GetVarientAmount() noexcept;
+	inline const unsigned long _GetRegisteredHashAmount() noexcept;
+	inline const unsigned long _AllocateNewHash() noexcept;
 
 	QLIE::_QLIEVarient _GetVarient(const unsigned long& _k_Hash);//Basement
 	QLIE::_QLIEVarient _GetVarient(const std::wstring& _k_Token);
@@ -172,6 +176,7 @@ private:
 	QLIE::_QLIEVarient* _GetVarientPointer(const unsigned long& _k_Hash);//Basement
 	QLIE::_QLIEVarient* _GetVarientPointer(const std::wstring& _k_Token);
 	QLIE::_QLIEVarient* _GetVarientPointer(const std::wstring& _k_Token, const unsigned long& _k_Hash);
+	QLIE::_QLIEVarient* _GetVarientPointer(const QLIE::_QLIEVarient _k_SourceVarient);
 
 	const unsigned long _GetHashByToken(const std::wstring& _k_Token);
 	const unsigned long _GetHashByToken(const std::wstring& _k_Token, std::wstring& _k_Value);
@@ -179,12 +184,11 @@ private:
 	const std::wstring _GetTokenByValue(const std::wstring& _k_Value);
 	const std::wstring _GetTokenByHash(const unsigned long& _k_Hash);
 
-	const std::wstring _GetValueByHash(const unsigned long& _k_Hash);
-
-	inline const bool _Refresh() noexcept;
-public:
+	inline const bool _Refresh(const unsigned long _k_ResortStandard = 500) noexcept;
 	QLIEVarientPool();
-	//QLIEVarientPool(unsigned long k_SpecificHash);
+	QLIEVarientPool(unsigned long k_SpecificHash);
+	QLIEVarientPool(const QLIE::_QLIEVarient& k_SpecificNULLVar);
+	QLIEVarientPool(unsigned long k_SpecificHash,const QLIE::_QLIEVarient& k_SpecificNULLVar);
 	~QLIEVarientPool();
 };
 class HashExistedException : public std::exception
