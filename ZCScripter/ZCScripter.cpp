@@ -13,6 +13,7 @@ int main()
 	//Script_Analyze temp("N:\\方力U盘备份\\机密\\Shojo\\scenario\\本編\\k18_01.s");
 	//Script_Analyze temp("E:\\TRANSPLANT_TEMP\\Bishojo Mangekyo - Kotowari to Meikyu no Shojo\\scenario\\本編\\k07_01.s");
 	QLIEVarientPool _pool;
+	const wstring _test1 = L"TEST_TOKEN", _test2 = L"TEST_VALUE";
 	string _temp1, _temp2;
 	for (size_t i = 10000; i <= 100000; i += 1000)
 	{
@@ -20,7 +21,7 @@ int main()
 		auto tStart = clock();
 		for (size_t j = 0; j < i; j++)
 		{
-			_pool._AllocateNewHash();
+			_pool._AddVarient(_test1, _test2);
 		}
 		auto tEnd = clock();
 		auto t = tEnd - tStart;
