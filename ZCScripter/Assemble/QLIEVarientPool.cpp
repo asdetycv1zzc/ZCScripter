@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <map>
 #include <Assemble.h>
 using namespace std;
 
@@ -13,12 +14,25 @@ const void QLIEVarientPool::_SortVarientByHash()
 {
 	sort(_Varients.begin(), _Varients.end(), _CmpVarientByHash);
 }
+const void QLIEVarientPool::_SortVarientByHash(const vector<QLIE::_QLIEVarient>::const_iterator& _k_begin, const vector<allocator< QLIE::_QLIEVarient>::value_type>::const_iterator& _k_end)
+{
+	sort(_k_begin, _k_end, _CmpVarientByHash);
+}
+const void QLIEVarientPool::_SortVarientByHash_Reversed()
+{
+	sort(_Varients.rbegin(), _Varients.rend(), _CmpVarientByHash);
+}
+const void QLIEVarientPool::_SortVarientByHash_Reversed(const reverse_iterator<vector<QLIE::_QLIEVarient>::iterator>& _k_rbegin, const reverse_iterator<vector<QLIE::_QLIEVarient>::iterator>& _k_rend)
+{
+	sort(_k_rbegin, _k_rend, _CmpVarientByHash);
+}
 
 const bool QLIEVarientPool::_AddVarient(const QLIE::_QLIEVarient& _k_Varient)
 {
 	if (_Check_HashIsExist(_k_Varient._Hash))
 		return false;
 	_Varients.push_back(_k_Varient);
+	_VarientHashMap[_k_Varient._Hash] = _k_Varient;
 	return true;
 }
 const bool QLIEVarientPool::_AddVarient(const std::wstring& _k_Token, const wstring& _k_Value, const QLIE::_QLIEParameterTypes _k_Type)
@@ -28,8 +42,7 @@ const bool QLIEVarientPool::_AddVarient(const std::wstring& _k_Token, const wstr
 	_temp.Value = _k_Value;
 	_temp.Type = _k_Type;
 	_temp._Hash = _AllocateNewHash();
-	_Varients.push_back(_temp);
-	return true;
+	return _AddVarient(_temp);
 }
 const bool QLIEVarientPool::_AddVarient(const unsigned long& _k_Hash, const wstring& _k_Value, const QLIE::_QLIEParameterTypes _k_Type)
 {
@@ -48,6 +61,7 @@ const bool QLIEVarientPool::_DeleteVarient(const QLIE::_QLIEVarient& _k_Varient)
 		return false;
 	_SetVarient(_k_Varient._Hash, _NULLVarient);
 	_DeletedHashes.push_back(_k_Varient._Hash);
+	_VarientHashMap[_k_Varient._Hash] = _NULLVarient;
 	return false;
 }
 const bool QLIEVarientPool::_DeleteVarient(const std::wstring& _k_Token, const wstring& _k_Value)
@@ -57,15 +71,15 @@ const bool QLIEVarientPool::_DeleteVarient(const std::wstring& _k_Token, const w
 		return false;
 	if (_Check_VarientIsDeleted(_temp_Hash))
 		return false;
-	_DeletedHashes.push_back(_temp_Hash);
-	return true;
+	auto& _temp = _GetVarient(_temp_Hash);
+	return _DeleteVarient(_temp);
 }
 const bool QLIEVarientPool::_DeleteVarient(const unsigned long& _k_Hash)
 {
 	if (_Check_VarientIsDeleted(_k_Hash))
 		return false;
-	_DeletedHashes.push_back(_k_Hash);
-	return true;
+	auto& _temp = _GetVarient(_k_Hash);
+	return _DeleteVarient(_temp);
 }
 const bool QLIEVarientPool::_DeleteVarient(const unsigned long& _k_Hash, const wstring& _k_Value)
 {
@@ -73,8 +87,7 @@ const bool QLIEVarientPool::_DeleteVarient(const unsigned long& _k_Hash, const w
 		return false;
 	if (_Check_VarientIsDeleted(_k_Hash))
 		return false;
-	_DeletedHashes.push_back(_k_Hash);
-	return true;
+	return _DeleteVarient(_k_Hash);
 }
 const bool QLIEVarientPool::_SetVarient(const QLIE::_QLIEVarient& _k_SourceVarient, const QLIE::_QLIEVarient& _k_DestVarient)
 {
@@ -244,4 +257,12 @@ const unsigned long QLIEVarientPool::_AllocateNewHash()
 	_Registered_Hashes.push_back(_NewHash);
 	_Refresh();
 	return _NewHash;
+}
+
+QLIE::_QLIEVarient QLIEVarientPool::_GetVarient(const unsigned long& _k_Hash)
+{
+	_Refresh();
+	if (!_Check_HashIsExist(_k_Hash))
+		return _NULLVarient;
+
 }

@@ -123,7 +123,7 @@ private:
 
 	std::vector<QLIE::_QLIEVarient> _Varients;
 	std::vector<unsigned long> _Registered_Hashes;//所有Hash，包括已经删除了的
-	std::vector<std::map<unsigned long, QLIE::_QLIEVarient> > _VarientHashMap;
+	std::map<unsigned long, QLIE::_QLIEVarient> _VarientHashMap;
 	std::vector<unsigned long> _DeletedHashes;
 	QLIE::_QLIEVarient _NULLVarient;
 
