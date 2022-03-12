@@ -185,6 +185,8 @@ public:
 	const std::wstring _GetTokenByHash(const unsigned long& _k_Hash);
 
 	inline const bool _Refresh(const unsigned long _k_ResortStandard = 500) noexcept;
+	void _Clear();
+
 	QLIEVarientPool();
 	QLIEVarientPool(unsigned long k_SpecificHash);
 	QLIEVarientPool(const QLIE::_QLIEVarient& k_SpecificNULLVar);

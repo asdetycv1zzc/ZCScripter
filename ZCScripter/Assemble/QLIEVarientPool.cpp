@@ -249,7 +249,8 @@ const unsigned long QLIEVarientPool::_AllocateNewHash() noexcept
 	_VarientHashMap[_NewHash] = _NULLVarient;
 	auto _temp_Var = _NULLVarient;
 	_temp_Var._Hash = _NewHash;
-	_Varients.push_back(_temp_Var);
+	_Varients.resize(_Varients.size() + 1);
+	_Varients[_Varients.size() - 1] = _temp_Var;
 	_Refresh();
 	return _NewHash;
 }
@@ -362,6 +363,17 @@ inline const bool QLIEVarientPool::_Refresh(const unsigned long _k_ResortStandar
 		_SortVarientByHash();
 	_RefreshTimes += 1;
 	return true;
+}
+void QLIEVarientPool::_Clear()
+{
+	_RefreshTimes = 0;
+	_RegisteredVarientAmount = 0;
+	_DeletedVarientAmount = 0;
+	_Varients.clear();
+	_VarientHashMap.clear();
+	_Registered_Hashes.clear();
+	_HashTokenMap.clear();
+	_DeletedHashes.clear();
 }
 
 QLIEVarientPool::QLIEVarientPool()
