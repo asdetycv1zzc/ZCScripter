@@ -46,7 +46,56 @@ enum SystemScriptTypes
 	//------------------------------
 	//Engine-related System Script Types
 	_JMP,				//example:\jmp,Avg_SelectCurLabel
+	/*跳转函数	{参数1 跳转位置}	[参数2 跳转文件]*/
 	_SUB,				//example:\sub,@@!KRouteJmp,"Scenario\Root.s",SelfFileName,01
+	/*调用函数	{参数1 函数名称}	[参数... 函数调用所用参数]*/
+	_CAL,				//example:\cal,Avg_RouteParamStr[i]=ParamStr[i]
+	/*计算函数	{参数1 表达式}*/
+	_VAR,				//example:\var,str,f
+	/*变量声明	{参数1 变量类型}	[参数... 变量名称]*/
+	_FUNCTION_DECLARE,	//example:@@!FileNameExtract
+	/*函数声明	{参数1 函数名称}*/
+	_CASE,				//example:\case,Avg_RouteParamStr[1]
+	_ANS,				//example:	\ans,"Route"
+	_ELSE,				//example:	\else
+	/*流程控制	类似于switch case default 用法略*/
+	_RET,				//example:\ret
+	/*函数返回	[缺省参数 默认为上一句语句的返回值*/
+	_IF_THEN,			//example:\if,ResultInt[0]==1\then
+	_END,				//example:	\end
+	/*逻辑判断	{参数1 表达式}*/
+	_EFN,				//example:\efn,ParamStr[0]
+	/*变量取值	{参数1 变量名称}*/
+	_CFE,				//example:\cfe,ResultStr[0],""
+	/*未知函数	{参数1 未知}*/
+	_SCP,				//example:\scp,misc
+	/*未知函数	{参数1 未知}*/
+	_GVAR,				//example:\gvar,int,misc_KeepPlayState
+	/*未知函数	{参数1 变量类型}	[参数... 变量名称]*/
+	_SVAR,				//example:\svar,int,#AutoSaveFileIndex
+	/*未知函数	{参数1 变量类型}	[参数... 变量名称]*/
+	_BSUB,				//example:\bsub,ResultStr[0],"\[rb,([^,]+),[^,]+\]","$1"
+	/*正则匹配	{参数1 原文本}	{参数2 正则表达式}	{参数3 模式}*/
+	_ZENC,				//example:\zenc,ResultStr[0]
+	/*未知函数	{参数1 未知}*/
+	_SWAP,				//example:\swap,d[j],d[j+1]
+	/*变量交换	{参数1 被交换变量1}	{参数2 被交换变量2}*/
+	_DRAW,				//example:\draw
+	/*未知函数	无参*/
+	_FMT,				//example:\fmt,"[pi,0,%d]",#LinePitch
+	/*文本格式化	{参数1 格式}	{参数... 值}*/
+	_NSW,				//example:\nsw,#IgnoreReturnSpaceWord
+	/*未知函数	{参数1 未知}*/
+	_KWL,				//example:\kwl,#KinsokuWordLength
+	/*未知函数	{参数1 未知}*/
+	_KWB,				//example:\kwb,#GyoutouKinsokuWord
+	/*未知函数	{参数1 未知}*/
+	_KWE,				//example:\kwe,#GyoumatuKinsokuWord
+	/*未知函数	{参数1 未知}*/
+	_NS,				//example:\ns,-1,#NotReturnSpaceLength
+	/*未知函数	{参数1 未知}	{参数2 未知}*/
+	_DIV,				//example:\div,"＠",ParamStr[0]
+	/*字符串分隔	{参数1 分割符}	{参数2 源字符串}*/
 };
 enum CharacterScriptTypes
 {

@@ -376,6 +376,23 @@ void QLIEVarientPool::_Clear()
 	_DeletedHashes.clear();
 }
 
+QLIEVarientPool QLIEVarientPool::operator+(const QLIE::_QLIEVarient& _b)
+{
+	QLIEVarientPool _temp = *this;
+	_temp._AddVarient(_b);
+	return _temp;
+}
+QLIEVarientPool QLIEVarientPool::operator-(const QLIE::_QLIEVarient& _b)
+{
+	QLIEVarientPool _temp = *this;
+	_temp._DeleteVarient(_b);
+	return _temp;
+}
+QLIE::_QLIEVarient QLIEVarientPool::operator[](const unsigned long _k_Hash)
+{
+	return _GetVarient(_k_Hash);
+}
+
 QLIEVarientPool::QLIEVarientPool()
 {
 	_RefreshTimes = 0;
