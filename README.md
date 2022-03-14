@@ -7,3 +7,4 @@
 ![QLIEVarientPool operator[] Release](QLIEVarientPool%20operator%5B%5D%20Release.jpg)
 ![QLIEVarientPool operator[] Debug](QLIEVarientPool%20operator%5B%5D%20Debug.jpg)
 ![QLIEVarientPool operator[Token] Release (40% weak data)](QLIEVarientPool%20operator%5BToken%5D%20Release%20(40%25%20weak%20data).jpg)
+![QLIEVarientPool operator+ Release (40% weak data)](QLIEVarientPool%20operator+%20Release%20(40%25%20weak%20data).jpg)
