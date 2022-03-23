@@ -94,6 +94,27 @@ namespace QLIE
 		_QLIEParameterTypes Type = _QLIEParameterTypes::_UNDEFINED__QLIEParameterTypes;	//变量类型
 		bool _IsDeleted = false;														//变量是否被删除
 	};
+
+	class QLIEVector
+	{
+	private:
+		std::vector<_QLIEVarient> _base;
+	public:
+		inline _QLIEVarient operator[](const unsigned _k_Hash) noexcept;
+		inline _QLIEVarient operator[](const std::wstring& _k_Token) noexcept;
+		const inline std::vector<_QLIEVarient>::iterator begin() noexcept;
+		const inline std::vector<_QLIEVarient>::iterator end() noexcept;
+		const inline std::vector<_QLIEVarient>::reverse_iterator rbegin() noexcept;
+		const inline std::vector<_QLIEVarient>::reverse_iterator rend() noexcept;
+		const inline size_t size() noexcept;
+		const inline void push_back(const _QLIEVarient& _Val) noexcept;
+		const inline void push_front(const _QLIEVarient& _Val) noexcept;
+		const inline void pop_back() noexcept;
+		const inline void resize(const size_t _Val) noexcept;
+		const inline void clear() noexcept;
+		const QLIEVector(const size_t k_PreAllocate);
+		const QLIEVector(const std::vector<_QLIEVarient>& k_PreBase);
+	};
 };
 
 class QLIEHelper
@@ -115,9 +136,11 @@ private:
 	参数里面提供_QLIEVarient类型参数的，提供的是已经指定了Hash的参数，非常不推荐使用
 	建议使用自动的提供_k_Token与_k_Value名称的函数，能够自动管理Hash值
 	*/
+
 	/*
 	所有Hash值都从0开始
 	*/
+
 	unsigned long _Self_Hash;				//这个变量池自身的Hash值
 	unsigned long _RegisteredVarientAmount;	//所有Hash，包括已经删除了的
 	unsigned long _DeletedVarientAmount;
@@ -188,8 +211,11 @@ public:
 	void _Clear();
 
 	QLIEVarientPool operator+(const QLIE::_QLIEVarient& _b);
+	void operator+=(const QLIE::_QLIEVarient& _b);
 	QLIEVarientPool operator-(const QLIE::_QLIEVarient& _b);
+	void operator-=(const QLIE::_QLIEVarient& _b);
 	QLIE::_QLIEVarient operator[](const unsigned long _k_Hash);
+	QLIE::_QLIEVarient operator[](const std::wstring& _k_Token);
 
 	QLIEVarientPool();
 	QLIEVarientPool(unsigned long k_SpecificHash);

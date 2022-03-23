@@ -397,19 +397,6 @@ const TranslatedScripts Script_Translator::_s_From_QLIESystem_To_KRKRSystem(cons
 		return _result;
 		break;
 	}
-	case SystemScriptTypes::_JMP:
-	{
-		QLIESystem _sys(_k_source._Filename);
-		vector<pair<wstring, wstring> > _paras(_k_source._parameters.ParameterCount);
-		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
-		{
-			_paras[i] = _s_Extract_QLIESubParameter(_k_source._parameters.Parameters[i].Parameter,wstring(DEFAULT_QLIE_SUBPARAMETER_SPLIT));
-		}
-		for (size_t i = 0; i < _k_source._parameters.ParameterCount; i++)
-		{
-			
-		}
-	}
 	}
 	
 	vector<wstring> _result;

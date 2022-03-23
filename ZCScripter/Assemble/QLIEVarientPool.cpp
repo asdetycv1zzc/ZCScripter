@@ -378,19 +378,29 @@ void QLIEVarientPool::_Clear()
 
 QLIEVarientPool QLIEVarientPool::operator+(const QLIE::_QLIEVarient& _b)
 {
-	QLIEVarientPool _temp = *this;
-	_temp._AddVarient(_b);
-	return _temp;
+	this->_AddVarient(_b);
+	return *this;
+}
+void QLIEVarientPool::operator+=(const QLIE::_QLIEVarient& _b)
+{
+	this->_AddVarient(_b);
 }
 QLIEVarientPool QLIEVarientPool::operator-(const QLIE::_QLIEVarient& _b)
 {
-	QLIEVarientPool _temp = *this;
-	_temp._DeleteVarient(_b);
-	return _temp;
+	this->_DeleteVarient(_b);
+	return *this;
+}
+void QLIEVarientPool::operator-=(const QLIE::_QLIEVarient& _b)
+{
+	this->_DeleteVarient(_b);
 }
 QLIE::_QLIEVarient QLIEVarientPool::operator[](const unsigned long _k_Hash)
 {
 	return _GetVarient(_k_Hash);
+}
+QLIE::_QLIEVarient QLIEVarientPool::operator[](const wstring& _k_Token)
+{
+	return _GetVarient(_k_Token);
 }
 
 QLIEVarientPool::QLIEVarientPool()
